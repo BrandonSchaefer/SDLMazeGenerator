@@ -64,8 +64,6 @@ public:
   virtual void Generate() = 0;
   virtual std::string GetName() const = 0;
 
-  Cell::Ptr Get(Point pos);
-
 protected:
   std::vector<Cell::Direction> directions_;
 
@@ -75,6 +73,7 @@ protected:
 private:
   std::vector<std::vector<Cell::Ptr> > maze_;
 
+  Cell::Ptr Get(Point pos);
 };
 
 #endif // MAZE
