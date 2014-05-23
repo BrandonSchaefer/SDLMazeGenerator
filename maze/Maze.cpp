@@ -1,0 +1,198 @@
+//-*- Mode: C++; indent-tabs-mode: nil; tab-width: 2 -*-
+/* * Copyright (C) 2013 Brandon Schaefer
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License version 3 as
+* published by the Free Software Foundation.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+* Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
+*/
+
+#include "Maze.h"
+
+#include <iostream>
+
+using namespace std;
+
+Maze::Maze (int x, int y)
+  : start_(1, 1)
+  , finish_(x, y)
+  , maze_(x+2)
+{
+  for (int i = 0; i < x + 2; ++i)
+    for (int j = 0; j < y + 2; ++j)
+      maze_[i].push_back(std::make_shared<Cell>());
+
+  directions_ = {Cell::Direction::RIGHT, Cell::Direction::DOWN, Cell::Direction::LEFT, Cell::Direction::UP};
+}
+
+void Maze::SetParent(Point const& current, Point const& parent)
+{
+  if (InBounds(current) && InBounds(parent))
+    Get(current)->SetParent(Get(parent));
+}
+
+bool Maze::ParentEqualPoint(Point const& parent, Point const& point)
+{
+  if (InBounds(parent) && InBounds(point))
+    return Get(parent)->GetParent() == Get(point);
+
+  return false;
+}
+
+bool Maze::InBounds(Point const& pos) const
+{
+  int x = pos.x();
+  int y = pos.y();
+
+  if (x > 0 && y > 0 && x < (int)maze_.size() - 1 && y < (int)maze_[0].size() - 1)
+    return true;
+
+  return false;
+}
+
+Cell::Ptr Maze::Get(Point pos)
+{
+  return maze_[pos.x()][pos.y()];
+}
+
+int Maze::Columns() const
+{
+  return maze_.size();
+}
+
+int Maze::Rows() const
+{
+  return maze_[0].size();
+}
+
+void Maze::OpenPassage(Point p, Cell::Direction dir)
+{
+  Get(p)->AddDirection(dir);
+  Get(p.Direction(dir))->AddDirection(OppositeDirection(dir));
+}
+
+void Maze::SetWall(Point p, Cell::Direction dir)
+{
+  Get(p)->RemoveDirection(dir);
+  Get(p.Direction(dir))->RemoveDirection(OppositeDirection(dir));
+}
+
+void Maze::SetStart(Point const& start)
+{
+  if (InBounds(start))
+    start_ = start;
+}
+
+Point Maze::GetStart() const
+{
+  return start_;
+}
+
+Point Maze::GetFinish() const
+{
+  return finish_;
+}
+
+bool Maze::RightOpen(Point point)
+{
+  return (InBounds(point) && Get(point)->RightOpen());
+}
+
+bool Maze::DownOpen(Point point)
+{
+  return (InBounds(point) && Get(point)->DownOpen());
+}
+
+bool Maze::LeftOpen(Point point)
+{
+  return (InBounds(point) && Get(point)->LeftOpen());
+}
+
+bool Maze::UpOpen(Point point)
+{
+  return (InBounds(point) && Get(point)->UpOpen());
+}
+
+std::vector<Cell::Direction> Maze::GetDirections() const
+{
+  return directions_;
+}
+
+Cell::Direction Maze::GetValidRandomDirection(Point& current)
+{
+  vector<Cell::Direction> valid_dirs;
+  Point random_dir;
+  Point tmp_pt;
+  int randN;
+
+  for (auto dir : directions_)
+  {
+    tmp_pt = current.Direction(dir);
+
+    if (InBounds(tmp_pt))
+      valid_dirs.push_back(dir);
+  }
+
+  randN = rand() % (valid_dirs.size());
+
+  return valid_dirs[randN];
+}
+
+Cell::Direction Maze::OppositeDirection(Cell::Direction dir) const
+{
+  switch (dir)
+  {
+    case (Cell::Direction::RIGHT):
+      return Cell::Direction::LEFT;
+    case (Cell::Direction::LEFT):
+      return Cell::Direction::RIGHT;
+    case (Cell::Direction::DOWN):
+      return Cell::Direction::UP;
+    case (Cell::Direction::UP):
+      return Cell::Direction::DOWN;
+  }
+
+  return Cell::Direction::RIGHT;
+}
+
+void Maze::PrintMaze()
+{
+  //cout << "\e[H";
+
+  for (int i = 0; i < Rows(); i++)
+    cout << " _";
+  cout << endl;
+
+  for (int i = 0; i < Columns(); i++)
+  {
+    cout << "|";
+    for (int j = 0; j < Rows(); j++)
+    {
+      Point p(i,j);
+
+      if (start_ == p)
+        cout << "\033[4;34mS\033[0m";
+      else if (finish_ == p)
+        cout << "\033[4;31mF\033[0m";
+      else if (Get(p)->DownOpen() && Get(p.Down())->UpOpen())
+        cout << " ";
+      else
+        cout << "_";
+
+      if (Get(p)->RightOpen() && Get(p.Right())->LeftOpen())
+        cout << " ";
+      else
+        cout << "|";
+    }
+    cout << endl;
+  }
+}
