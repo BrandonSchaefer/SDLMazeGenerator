@@ -1,5 +1,5 @@
 //-*- Mode: C++; indent-tabs-mode: nil; tab-width: 2 -*-
-/* * Copyright (C) 2013 Brandon Schaefer
+/* * Copyright (C) 2013-2014 Brandon Schaefer
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License version 3 as
@@ -19,10 +19,6 @@
 #include "PrimsMaze.h"
 #include "Marked.h"
 
-#include <stdlib.h>
-
-using namespace std;
-
 PrimsMaze::PrimsMaze(int x, int y)
   : Maze(x,y)
 {
@@ -30,11 +26,11 @@ PrimsMaze::PrimsMaze(int x, int y)
 
 Cell::Direction PrimsMaze::GetOppositeParentsDirection(Point& current)
 {
-  if (ParentEqualPoint(current, current.Right()))//cell->GetParent() == Get(current.Right()))
+  if (ParentEqualPoint(current, current.Right()))
     return Cell::Direction::LEFT;
-  else if (ParentEqualPoint(current, current.Down()))//cell->GetParent() == Get(current.Down()))
+  else if (ParentEqualPoint(current, current.Down()))
     return Cell::Direction::UP;
-  else if (ParentEqualPoint(current, current.Left()))//cell->GetParent() == Get(current.Left()))
+  else if (ParentEqualPoint(current, current.Left()))
     return Cell::Direction::RIGHT;
   else
     return Cell::Direction::DOWN;
@@ -43,7 +39,7 @@ Cell::Direction PrimsMaze::GetOppositeParentsDirection(Point& current)
 void PrimsMaze::Generate()
 {
   Marked marked(Columns(), Rows());
-  vector<Point> walls;
+  std::vector<Point> walls;
 
   int randN;
   Point opp_cur;
@@ -53,7 +49,6 @@ void PrimsMaze::Generate()
 
   Point current((Columns()-2)/2, (Rows()-2)/2);
   SetParent(current, start);
-  //Get(current)->SetParent(Get(start));
   marked.Mark(current);
   OpenPassage(current, Cell::Direction::RIGHT);
   walls.push_back(current.Right());
@@ -79,7 +74,6 @@ void PrimsMaze::Generate()
         if (!InBounds(cur_dir) || marked.IsMarked(cur_dir))
           continue;
 
-        //Get(cur_dir)->SetParent(Get(current));
         SetParent(cur_dir, current);
         walls.push_back(cur_dir);
 
@@ -92,7 +86,7 @@ void PrimsMaze::Generate()
   }
 }
 
-string PrimsMaze::GetName() const
+std::string PrimsMaze::GetName() const
 {
   return "PrimsMaze";
 }
