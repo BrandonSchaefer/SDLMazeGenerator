@@ -93,6 +93,15 @@ void GrowingTreeMaze::Generate()
   } while (!open_neighbours.empty());
 }
 
+void GrowingTreeMaze::GenerateNext()
+{
+}
+
+bool GrowingTreeMaze::HasNext() const
+{
+  return false;
+}
+
 string GrowingTreeMaze::GetName() const
 {
   return "GrowingTreeMaze";

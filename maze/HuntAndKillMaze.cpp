@@ -110,6 +110,15 @@ Cell::Direction HuntAndKillMaze::GetUnMarkedRandomDirection(Point& current)
   return valid_dirs[randN];
 }
 
+void HuntAndKillMaze::GenerateNext()
+{
+}
+
+bool HuntAndKillMaze::HasNext() const
+{
+  return false;
+}
+
 string HuntAndKillMaze::GetName() const
 {
   return "HuntAndKillMaze";

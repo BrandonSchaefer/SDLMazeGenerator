@@ -86,6 +86,15 @@ void PrimsMaze::Generate()
   }
 }
 
+void PrimsMaze::GenerateNext()
+{
+}
+
+bool PrimsMaze::HasNext() const
+{
+  return false;
+}
+
 std::string PrimsMaze::GetName() const
 {
   return "PrimsMaze";

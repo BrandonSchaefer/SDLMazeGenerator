@@ -57,6 +57,15 @@ void BinaryTreeMaze::Generate()
   }
 }
 
+void BinaryTreeMaze::GenerateNext()
+{
+}
+
+bool BinaryTreeMaze::HasNext() const
+{
+  return false;
+}
+
 string BinaryTreeMaze::GetName() const
 {
   return "BinaryTreeMaze";

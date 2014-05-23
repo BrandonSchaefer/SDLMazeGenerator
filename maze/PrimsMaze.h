@@ -27,6 +27,10 @@ public:
   PrimsMaze(int x, int y);
 
   void Generate();
+
+  void GenerateNext();
+  bool HasNext() const;
+
   std::string GetName() const;
 
 private:

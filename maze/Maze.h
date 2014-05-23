@@ -62,6 +62,10 @@ public:
   Cell::Direction OppositeDirection(Cell::Direction dir) const;
 
   virtual void Generate() = 0;
+
+  virtual void GenerateNext() = 0;
+  virtual bool HasNext() const = 0;
+
   virtual std::string GetName() const = 0;
 
 protected:

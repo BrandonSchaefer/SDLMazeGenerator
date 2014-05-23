@@ -67,6 +67,15 @@ void SideWinderMaze::Generate()
   }
 }
 
+void SideWinderMaze::GenerateNext()
+{
+}
+
+bool SideWinderMaze::HasNext() const
+{
+  return false;
+}
+
 string SideWinderMaze::GetName() const
 {
   return "SideWinderMaze";

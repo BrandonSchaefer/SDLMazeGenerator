@@ -81,6 +81,15 @@ void WilsonsMaze::Generate()
   }
 }
 
+void WilsonsMaze::GenerateNext()
+{
+}
+
+bool WilsonsMaze::HasNext() const
+{
+  return false;
+}
+
 string WilsonsMaze::GetName() const
 {
   return "WilsonsMaze";

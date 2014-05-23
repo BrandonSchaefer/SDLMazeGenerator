@@ -35,12 +35,20 @@ public:
   FakeMaze(int x, int y)
     : Maze(x,y)
   {
-    start_ = START; 
-    finish_ = FINISH; 
+    start_ = START;
+    finish_ = FINISH;
   }
 
   void Generate()
   {}
+
+  void GenerateNext()
+  {}
+
+  bool HasNext() const
+  {
+    return false;
+  }
 
   std::string GetName() const
   {

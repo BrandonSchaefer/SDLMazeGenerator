@@ -51,6 +51,15 @@ void AldousBroderMaze::Generate()
   }
 }
 
+void AldousBroderMaze::GenerateNext()
+{
+}
+
+bool AldousBroderMaze::HasNext() const
+{
+  return false;
+}
+
 string AldousBroderMaze::GetName() const
 {
   return "AldousBroderMaze";
