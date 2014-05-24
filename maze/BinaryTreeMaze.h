@@ -32,6 +32,10 @@ public:
   bool HasNext() const;
 
   std::string GetName() const;
+
+private:
+  int i_;
+  int j_;
 };
 
 #endif // BINARYTREEMAZE

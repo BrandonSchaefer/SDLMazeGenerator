@@ -17,14 +17,19 @@
 */
 
 #include "PrimsMaze.h"
-#include "Marked.h"
 
 PrimsMaze::PrimsMaze(int x, int y)
   : Maze(x,y)
+  , marked_(Columns(), Rows())
+  , current_((Columns()-2)/2, (Rows()-2)/2)
 {
+  SetParent(current_, start_);
+  marked_.Mark(current_);
+  OpenPassage(current_, Cell::Direction::RIGHT);
+  walls_.push_back(current_.Right());
 }
 
-Cell::Direction PrimsMaze::GetOppositeParentsDirection(Point& current)
+Cell::Direction PrimsMaze::GetOppositeParentsDirection(Point const& current)
 {
   if (ParentEqualPoint(current, current.Right()))
     return Cell::Direction::LEFT;
@@ -38,61 +43,48 @@ Cell::Direction PrimsMaze::GetOppositeParentsDirection(Point& current)
 
 void PrimsMaze::Generate()
 {
-  Marked marked(Columns(), Rows());
-  std::vector<Point> walls;
-
-  int randN;
-  Point opp_cur;
-  Cell::Direction opp_dir;
-
-  Point start(1,1);
-
-  Point current((Columns()-2)/2, (Rows()-2)/2);
-  SetParent(current, start);
-  marked.Mark(current);
-  OpenPassage(current, Cell::Direction::RIGHT);
-  walls.push_back(current.Right());
-
-  while (!walls.empty())
-  {
-    current = walls.back();
-    walls.pop_back();
-
-    opp_dir = GetOppositeParentsDirection(current);
-    opp_cur = current.Direction(opp_dir);
-
-    if (!marked.IsMarked(current))
-    {
-      OpenPassage(current, OppositeDirection(opp_dir));
-      marked.Mark(current);
-      //PrintMaze();
-
-      for (auto dir : directions_)
-      {
-        Point cur_dir = current.Direction(dir);
-
-        if (!InBounds(cur_dir) || marked.IsMarked(cur_dir))
-          continue;
-
-        SetParent(cur_dir, current);
-        walls.push_back(cur_dir);
-
-        randN = rand() % walls.size();
-        Point tmp = walls[randN];
-        walls[randN] = walls.back();
-        walls[walls.size()-1] = tmp;
-      }
-    }
-  }
+  while (HasNext())
+    GenerateNext();
 }
 
 void PrimsMaze::GenerateNext()
 {
+  int randN;
+  Point opp_cur;
+  Cell::Direction opp_dir;
+
+  current_ = walls_.back();
+  walls_.pop_back();
+
+  opp_dir = GetOppositeParentsDirection(current_);
+  opp_cur = current_.Direction(opp_dir);
+
+  if (!marked_.IsMarked(current_))
+  {
+    OpenPassage(current_, OppositeDirection(opp_dir));
+    marked_.Mark(current_);
+
+    for (auto dir : directions_)
+    {
+      Point cur_dir = current_.Direction(dir);
+
+      if (!InBounds(cur_dir) || marked_.IsMarked(cur_dir))
+        continue;
+
+      SetParent(cur_dir, current_);
+      walls_.push_back(cur_dir);
+
+      randN = rand() % walls_.size();
+      Point tmp = walls_[randN];
+      walls_[randN] = walls_.back();
+      walls_[walls_.size()-1] = tmp;
+    }
+  }
 }
 
 bool PrimsMaze::HasNext() const
 {
-  return false;
+  return !walls_.empty();
 }
 
 std::string PrimsMaze::GetName() const

@@ -19,6 +19,7 @@
 #ifndef WILSONSMAZE
 #define WILSONSMAZE
 
+#include "Marked.h"
 #include "Maze.h"
 
 class WilsonsMaze : public Maze
@@ -32,6 +33,11 @@ public:
   bool HasNext() const;
 
   std::string GetName() const;
+
+private:
+  Marked marked_;
+  std::vector<Point> outside_cells_;
+  std::vector<std::vector<Cell::Direction>> paths_;
 };
 
 #endif // WILSONSMAZE

@@ -18,34 +18,33 @@
 
 #include "GrowingTreeMaze.h"
 
-#include <stdlib.h>
-
-using namespace std;
-
 GrowingTreeMaze::GrowingTreeMaze(int x, int y)
   : Maze(x,y)
   , marked_(Columns(), Rows())
-{}
-
-void SwapAndPop(vector<Point>& open_neighbours, int index)
+  , cur_pair_(start_, Cell::Direction::RIGHT)
 {
-  Point tmp_pt = open_neighbours.back();
-  open_neighbours[index] = tmp_pt;
-  open_neighbours.pop_back();
+  open_neighbours_.push_back(start_);
+}
+
+void GrowingTreeMaze::SwapAndPop(int index)
+{
+  Point tmp_pt = open_neighbours_.back();
+  open_neighbours_[index] = tmp_pt;
+  open_neighbours_.pop_back();
 }
 
 // Base Case: If no more open neighbours return default values
 // Recusive, If: Find a random point that has an open neighbours
 //          Else: Remove from the vector, and look for a new one
-pair<Point, Cell::Direction> GrowingTreeMaze::GetValidNeighbour(vector<Point>& open_neighbours)
+std::pair<Point, Cell::Direction> GrowingTreeMaze::GetValidNeighbour()
 {
-  if (open_neighbours.empty())
-    return make_pair(Point(), Cell::Direction::RIGHT);
+  if (open_neighbours_.empty())
+    return std::make_pair(Point(), Cell::Direction::RIGHT);
 
-  int randN = rand() % open_neighbours.size();
-  vector<Cell::Direction> valid_dir;
+  int randN = rand() % open_neighbours_.size();
+  std::vector<Cell::Direction> valid_dir;
 
-  Point rand_pt = open_neighbours[randN];
+  Point rand_pt = open_neighbours_[randN];
   Cell::Direction new_dir;
   Point tmp_pt;
 
@@ -60,49 +59,41 @@ pair<Point, Cell::Direction> GrowingTreeMaze::GetValidNeighbour(vector<Point>& o
   if (!valid_dir.empty())
   {
     new_dir = valid_dir[rand() % valid_dir.size()];
-    open_neighbours.push_back(rand_pt.Direction(new_dir));
-    return make_pair(rand_pt, new_dir);
+    open_neighbours_.push_back(rand_pt.Direction(new_dir));
+    return std::make_pair(rand_pt, new_dir);
   }
 
-  SwapAndPop(open_neighbours, randN);
+  SwapAndPop(randN);
 
-  return GetValidNeighbour(open_neighbours);
+  return GetValidNeighbour();
 }
 
 void GrowingTreeMaze::Generate()
 {
-  vector<Point> open_neighbours;
-
-  Point cur_pt;
-  Cell::Direction cur_dir;
-
-  pair<Point, Cell::Direction> cur_pair(start_, Cell::Direction::RIGHT);
-  open_neighbours.push_back(start_);
-
-  do {
-    cur_pt = cur_pair.first;
-    cur_dir = cur_pair.second;
-
-    OpenPassage(cur_pt, cur_dir);
-    marked_.Mark(cur_pt.Direction(cur_dir));
-
-    //PrintMaze();
-    
-    cur_pair = GetValidNeighbour(open_neighbours);
-
-  } while (!open_neighbours.empty());
+  while (HasNext())
+    GenerateNext();
 }
 
 void GrowingTreeMaze::GenerateNext()
 {
+  Point cur_pt;
+  Cell::Direction cur_dir;
+
+  cur_pt  = cur_pair_.first;
+  cur_dir = cur_pair_.second;
+
+  OpenPassage(cur_pt, cur_dir);
+  marked_.Mark(cur_pt.Direction(cur_dir));
+
+  cur_pair_ = GetValidNeighbour();
 }
 
 bool GrowingTreeMaze::HasNext() const
 {
-  return false;
+  return !open_neighbours_.empty();
 }
 
-string GrowingTreeMaze::GetName() const
+std::string GrowingTreeMaze::GetName() const
 {
   return "GrowingTreeMaze";
 }

@@ -34,7 +34,10 @@ public:
   std::string GetName() const;
 
 private:
-
+  std::vector<Point> run_set_;
+  Point current_;
+  int i_;
+  int j_;
 };
 
 #endif // SIDEWINDERMAZE

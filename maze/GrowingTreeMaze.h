@@ -35,10 +35,12 @@ public:
   std::string GetName() const;
 
 private:
-  std::pair<Point, Cell::Direction> GetValidNeighbour(std::vector<Point>& open_neighbours);
+  void SwapAndPop(int index);
+  std::pair<Point, Cell::Direction> GetValidNeighbour();
 
   Marked marked_;
-
+  std::vector<Point> open_neighbours_;
+  std::pair<Point, Cell::Direction> cur_pair_;
 };
 
 #endif // GROWINGTREEMAZE

@@ -19,6 +19,7 @@
 #ifndef PRIMSMAZE
 #define PRIMSMAZE
 
+#include "Marked.h"
 #include "Maze.h"
 
 class PrimsMaze : public Maze
@@ -34,7 +35,11 @@ public:
   std::string GetName() const;
 
 private:
-  Cell::Direction GetOppositeParentsDirection(Point& current);
+  Cell::Direction GetOppositeParentsDirection(Point const& current);
+
+  Marked marked_;
+  Point current_;
+  std::vector<Point> walls_;
 
 };
 

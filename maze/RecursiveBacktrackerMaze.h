@@ -22,6 +22,8 @@
 #include "Marked.h"
 #include "Maze.h"
 
+#include <stack>
+
 class RecursiveBacktrackerMaze : public Maze
 {
 public:
@@ -37,8 +39,11 @@ public:
 private:
   std::vector<std::pair<Point, Cell::Direction> > GetUnMarkedNeighbours(Point& current);
 
-  Marked marked_;
+  std::stack<Point> backtracker_;
 
+  Marked marked_;
+  Point current_;
+  unsigned cell_count_;
 };
 
 #endif // RECURSIVEBACKTRACKERMAZE

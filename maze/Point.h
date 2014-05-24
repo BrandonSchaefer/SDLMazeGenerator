@@ -30,14 +30,15 @@ public:
   int x() const;
   int y() const;
   
-  Point Direction(Cell::Direction dir);
+  Point Direction(Cell::Direction dir) const;
 
-  Point Right();
-  Point Down();
-  Point Left();
-  Point Up();
+  Point Right() const;
+  Point Down() const;
+  Point Left() const;
+  Point Up() const;
 
-  bool operator==(Point const& p);
+  bool operator==(Point const& p) const;
+  bool operator!=(Point const& p) const;
 
 private:
   int x_;

@@ -24,56 +24,60 @@ using namespace std;
 
 SideWinderMaze::SideWinderMaze(int x, int y)
   : Maze(x, y)
-{}
+  , current_(2, 1)
+  , i_(2)
+  , j_(1)
+{
+  run_set_.push_back(start_.Down());
+
+  for (int j = 1; j < Rows()-2; j++)
+    OpenPassage(Point(1, j), Cell::Direction::RIGHT);
+}
 
 void SideWinderMaze::Generate()
 {
-  vector<Point> run_set;
-  bool open_east = false;
-
-  Point up_point;
-  Point current;
-  run_set.push_back(start_.Down());
-
-  for (int j = 1; j < Rows()-2; j++)
-    OpenPassage(Point(1,j), Cell::Direction::RIGHT);
-
-  for (int i = 2; i <= Columns()-2; i++)
-  {
-    current = Point(i,1);
-
-    for (int j = 1; j <= Rows()-2; j++)
-    {
-      open_east = rand() % 2;
-
-      if (open_east && InBounds(current.Right()))
-      {
-        OpenPassage(current, Cell::Direction::RIGHT);
-        current = current.Right();
-        run_set.push_back(current);
-      }
-      else
-      {
-        if (run_set.empty())
-          up_point = current;
-        else
-          up_point = run_set[rand() % run_set.size()];
-
-        OpenPassage(up_point, Cell::Direction::UP);
-        current = current.Right();
-        run_set.clear();
-      }
-    }
-  }
+  while (HasNext())
+    GenerateNext();
 }
 
 void SideWinderMaze::GenerateNext()
 {
+  bool open_east = rand() % 2;
+
+  if (j_ > Rows() - 2)
+  {
+    i_++;
+    j_ = 1;
+
+    current_ = Point(i_, 1);
+  }
+
+  j_++;
+
+  if (open_east && InBounds(current_.Right()))
+  {
+    OpenPassage(current_, Cell::Direction::RIGHT);
+    current_ = current_.Right();
+    run_set_.push_back(current_);
+  }
+  else
+  {
+    Point up_point;
+
+    if (run_set_.empty())
+      up_point = current_;
+    else
+      up_point = run_set_[rand() % run_set_.size()];
+
+    OpenPassage(up_point, Cell::Direction::UP);
+    current_ = current_.Right();
+    run_set_.clear();
+  }
 }
 
 bool SideWinderMaze::HasNext() const
 {
-  return false;
+  return (i_ <= Columns() - 2);
 }
 
 string SideWinderMaze::GetName() const

@@ -19,51 +19,21 @@
 #include "Marked.h"
 #include "RecursiveBacktrackerMaze.h"
 
-#include <stack>
-#include <stdlib.h>
-
 using namespace std;
 
 RecursiveBacktrackerMaze::RecursiveBacktrackerMaze(int x, int y)
   : Maze(x,y)
   , marked_(Columns(), Rows())
-{}
+  , cell_count_((Columns()-2) * (Rows()-2) - 1)
+{
+  marked_.Mark(start_);
+  backtracker_.push(start_);
+}
 
 void RecursiveBacktrackerMaze::Generate()
 {
-  vector<pair<Point, Cell::Direction> > neighbours;
-  stack<Point> backtracker;
-
-  int cell_count = (Columns()-2) * (Rows()-2) - 1;
-
-  Point current;
-  pair<Point, Cell::Direction> new_cur;
-
-  backtracker.push(start_);
-  marked_.Mark(start_);
-
-  while (cell_count > 0)
-  {
-    neighbours = GetUnMarkedNeighbours(current);
-
-    if (!neighbours.empty())
-    {
-      new_cur = neighbours[rand() % neighbours.size()];
-      backtracker.push(new_cur.first);
-      OpenPassage(current, new_cur.second);
-
-      current = new_cur.first;
-      marked_.Mark(current);
-      cell_count--;
-
-      //PrintMaze();
-    }
-    else if (!backtracker.empty())
-    {
-      current = backtracker.top();
-      backtracker.pop();
-    }
-  }
+  while (HasNext())
+    GenerateNext();
 }
 
 vector<pair<Point, Cell::Direction> > RecursiveBacktrackerMaze::GetUnMarkedNeighbours(Point& cur)
@@ -79,11 +49,31 @@ vector<pair<Point, Cell::Direction> > RecursiveBacktrackerMaze::GetUnMarkedNeigh
 
 void RecursiveBacktrackerMaze::GenerateNext()
 {
+  pair<Point, Cell::Direction> new_cur;
+  vector<pair<Point, Cell::Direction> > neighbours;
+
+  neighbours = GetUnMarkedNeighbours(current_);
+
+  if (!neighbours.empty())
+  {
+    new_cur = neighbours[rand() % neighbours.size()];
+    backtracker_.push(new_cur.first);
+    OpenPassage(current_, new_cur.second);
+
+    current_ = new_cur.first;
+    marked_.Mark(current_);
+    cell_count_--;
+  }
+  else if (!backtracker_.empty())
+  {
+    current_ = backtracker_.top();
+    backtracker_.pop();
+  }
 }
 
 bool RecursiveBacktrackerMaze::HasNext() const
 {
-  return false;
+  return cell_count_ > 0;
 }
 
 string RecursiveBacktrackerMaze::GetName() const

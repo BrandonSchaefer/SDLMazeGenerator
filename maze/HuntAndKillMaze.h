@@ -40,6 +40,8 @@ private:
   Cell::Direction GetUnMarkedRandomDirection(Point& current);
 
   Marked marked_;
+  Point last_used_index_;
+  Point current_;
 };
 
 #endif // HUNTANDKILLMAZE

@@ -38,7 +38,7 @@ int Point::y() const
   return y_;
 }
 
-Point Point::Direction(Cell::Direction dir)
+Point Point::Direction(Cell::Direction dir) const
 {
   switch (dir)
   {
@@ -55,27 +55,32 @@ Point Point::Direction(Cell::Direction dir)
   return Cell::Direction::RIGHT;
 }
 
-Point Point::Right()
+Point Point::Right() const
 {
   return Point(x_, y_+1);
 }
 
-Point Point::Down()
+Point Point::Down() const
 {
   return Point(x_+1, y_);
 }
 
-Point Point::Left()
+Point Point::Left() const
 {
   return Point(x_, y_-1);
 }
 
-Point Point::Up()
+Point Point::Up() const
 {
   return Point(x_-1, y_);
 }
 
-bool Point::operator==(Point const& p)
+bool Point::operator==(Point const& p) const
 {
   return x_ == p.x_ && y_ == p.y_;
+}
+
+bool Point::operator!=(Point const& p) const
+{
+  return !(*this == p);
 }

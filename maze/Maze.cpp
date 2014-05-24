@@ -183,7 +183,7 @@ void Maze::PrintMaze()
         cout << "\033[4;34mS\033[0m";
       else if (finish_ == p)
         cout << "\033[4;31mF\033[0m";
-      else if (Get(p)->DownOpen() && Get(p.Down())->UpOpen())
+      if (Get(p)->DownOpen() && Get(p.Down())->UpOpen())
         cout << " ";
       else
         cout << "_";

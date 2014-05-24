@@ -16,16 +16,19 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
+/* FIXME This maze does not work correctly, produces infinte loops (which is shouldnt) 
+   need to re-do this implemention... sad face
+*/
 #include "HuntAndKillMaze.h"
 
-#include <stdlib.h>
-
-using namespace std;
-
 HuntAndKillMaze::HuntAndKillMaze(int x, int y)
-  : Maze(x,y)
+  : Maze(x, y)
   , marked_(Columns(), Rows())
-{}
+  , last_used_index_(start_.x(), start_.y())
+  , current_(last_used_index_)
+{
+  marked_.Mark(start_);
+}
 
 bool HuntAndKillMaze::HasOpenNeighbours(Point& current)
 {
@@ -43,26 +46,32 @@ bool HuntAndKillMaze::HasOpenNeighbours(Point& current)
 
 void HuntAndKillMaze::Generate()
 {
+  while (HasNext())
+    GenerateNext();
+}
+
+void HuntAndKillMaze::GenerateNext()
+{
   Cell::Direction random_dir;
-  Point last_used_index(1,1);
-  marked_.Mark(start_);
-  Point current;
 
-  while (last_used_index.x() != -1)
+  if (HasOpenNeighbours(current_))
   {
-    current = last_used_index;
+    random_dir = GetUnMarkedRandomDirection(current_);
+    OpenPassage(current_, random_dir);
 
-    while (HasOpenNeighbours(current))
-    {
-      random_dir = GetUnMarkedRandomDirection(current);
-      OpenPassage(current, random_dir);
-
-      marked_.Mark(current);
-      current = current.Direction(random_dir);
-    }
-
-    last_used_index = FindNextUnMarkedCell(last_used_index);
+    marked_.Mark(current_);
+    current_ = current_.Direction(random_dir);
   }
+  else
+  {
+    last_used_index_ = FindNextUnMarkedCell(last_used_index_);
+    current_ = last_used_index_;
+  }
+}
+
+bool HuntAndKillMaze::HasNext() const
+{
+  return last_used_index_.x() != -1;
 }
 
 Point HuntAndKillMaze::FindNextUnMarkedCell(Point const& current)
@@ -92,7 +101,7 @@ Point HuntAndKillMaze::FindNextUnMarkedCell(Point const& current)
 
 Cell::Direction HuntAndKillMaze::GetUnMarkedRandomDirection(Point& current)
 {
-  vector<Cell::Direction> valid_dirs;
+  std::vector<Cell::Direction> valid_dirs;
   Point random_dir;
   Point tmp_pt;
   int randN;
@@ -110,16 +119,7 @@ Cell::Direction HuntAndKillMaze::GetUnMarkedRandomDirection(Point& current)
   return valid_dirs[randN];
 }
 
-void HuntAndKillMaze::GenerateNext()
-{
-}
-
-bool HuntAndKillMaze::HasNext() const
-{
-  return false;
-}
-
-string HuntAndKillMaze::GetName() const
+std::string HuntAndKillMaze::GetName() const
 {
   return "HuntAndKillMaze";
 }

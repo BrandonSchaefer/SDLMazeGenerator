@@ -24,46 +24,49 @@ using namespace std;
 
 BinaryTreeMaze::BinaryTreeMaze(int x, int y)
   : Maze(x,y)
+  , i_(1)
+  , j_(1)
 {}
 
 void BinaryTreeMaze::Generate()
 {
-  bool move_up;
-  Point p;
-
-  for (int i = 1; i < Columns() - 1; i++)
-  {
-    for (int j = 1; j < Rows() - 1; j++)
-    {
-      move_up = rand() % 2;
-      p = Point(i,j);
-
-      if (move_up)
-      {
-        if (InBounds(p.Up()))
-          OpenPassage(p, Cell::Direction::UP);
-        else if (InBounds(p.Left()))
-          OpenPassage(p, Cell::Direction::LEFT);
-      }
-      else
-      {
-        if (InBounds(p.Left()))
-          OpenPassage(p, Cell::Direction::LEFT);
-        else if (InBounds(p.Up()))
-          OpenPassage(p, Cell::Direction::UP);
-      }
-      //PrintMaze();
-    }
-  }
+  while (HasNext())
+    GenerateNext();
 }
 
 void BinaryTreeMaze::GenerateNext()
 {
+  bool move_up = rand() % 2;
+  Point p;
+
+  if (j_ >= Rows() - 1)
+  {
+    i_++;
+    j_ = 1;
+  }
+
+  p = Point(i_, j_);
+  j_++;
+
+  if (move_up)
+  {
+    if (InBounds(p.Up()))
+      OpenPassage(p, Cell::Direction::UP);
+    else if (InBounds(p.Left()))
+      OpenPassage(p, Cell::Direction::LEFT);
+  }
+  else
+  {
+    if (InBounds(p.Left()))
+      OpenPassage(p, Cell::Direction::LEFT);
+    else if (InBounds(p.Up()))
+      OpenPassage(p, Cell::Direction::UP);
+  }
 }
 
 bool BinaryTreeMaze::HasNext() const
 {
-  return false;
+  return (i_ < Columns() - 1);
 }
 
 string BinaryTreeMaze::GetName() const

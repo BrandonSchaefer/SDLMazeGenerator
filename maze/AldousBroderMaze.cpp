@@ -17,50 +17,44 @@
 */
 
 #include "AldousBroderMaze.h"
-#include "Marked.h"
-
-#include <stdlib.h>
-
-using namespace std;
 
 AldousBroderMaze::AldousBroderMaze(int x, int y)
   : Maze(x,y)
+  , marked_(Columns(), Rows())
+  , current_(1, 1)
+  , cell_count_((Columns()-2) * (Rows()-2))
 {}
 
 void AldousBroderMaze::Generate()
 {
-  Marked marked(Columns(), Rows());
-  int cell_count = (Columns()-2) * (Rows()-2);
-
-  Point current(1,1);
-  Cell::Direction rand_dir;
-
-  while (cell_count > 0)
-  {
-    rand_dir = GetValidRandomDirection(current);
-    current = current.Direction(rand_dir);
-
-    if (!marked.IsMarked(current))
-    {
-      OpenPassage(current, OppositeDirection(rand_dir));
-      marked.Mark(current);
-      cell_count--;
-
-      //PrintMaze();
-    }
-  }
+  while (HasNext())
+    GenerateNext();
 }
 
 void AldousBroderMaze::GenerateNext()
 {
+  Cell::Direction rand_dir = GetValidRandomDirection(current_);
+  current_ = current_.Direction(rand_dir);
+
+  if (!marked_.IsMarked(current_))
+  {
+    OpenPassage(current_, OppositeDirection(rand_dir));
+    marked_.Mark(current_);
+    cell_count_--;
+  }
+  else
+  {
+    // If we don't open a new passage, keep going until we do.
+    GenerateNext();
+  }
 }
 
 bool AldousBroderMaze::HasNext() const
 {
-  return false;
+  return cell_count_ > 0;
 }
 
-string AldousBroderMaze::GetName() const
+std::string AldousBroderMaze::GetName() const
 {
   return "AldousBroderMaze";
 }

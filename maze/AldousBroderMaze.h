@@ -19,6 +19,7 @@
 #ifndef ALDOUSBRODERMAZE
 #define ALDOUSBRODERMAZE
 
+#include "Marked.h"
 #include "Maze.h"
 
 class AldousBroderMaze : public Maze
@@ -32,6 +33,11 @@ public:
   bool HasNext() const;
 
   std::string GetName() const;
+
+private:
+  Marked marked_;
+  Point current_;
+  unsigned cell_count_;
 };
 
 #endif // ALDOUSBRODERMAZE
