@@ -21,6 +21,9 @@
 
 #include "Maze.h"
 
+namespace maze
+{
+
 class SideWinderMaze : public Maze
 {
 public:
@@ -39,5 +42,7 @@ private:
   int i_;
   int j_;
 };
+
+} // namespace maze
 
 #endif // SIDEWINDERMAZE

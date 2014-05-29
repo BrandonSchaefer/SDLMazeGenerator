@@ -21,6 +21,9 @@
 
 using namespace std;
 
+namespace maze
+{
+
 RecursiveBacktrackerMaze::RecursiveBacktrackerMaze(int x, int y)
   : Maze(x,y)
   , marked_(Columns(), Rows())
@@ -40,9 +43,12 @@ vector<pair<Point, Cell::Direction> > RecursiveBacktrackerMaze::GetUnMarkedNeigh
 {
   vector<pair<Point, Cell::Direction> > neighbours;
 
-  for (auto dir : directions_)
+  for (int i = 0; i < Cell::Direction::Size; ++i)
+  {
+    auto dir = Cell::Direction(i);
     if (InBounds(cur.Direction(dir)) && !marked_.IsMarked(cur.Direction(dir)))
       neighbours.push_back(make_pair(cur.Direction(dir), dir));
+  }
 
   return neighbours;
 }
@@ -68,6 +74,9 @@ void RecursiveBacktrackerMaze::GenerateNext()
   {
     current_ = backtracker_.top();
     backtracker_.pop();
+
+    if (HasNext())
+      GenerateNext();
   }
 }
 
@@ -80,3 +89,5 @@ string RecursiveBacktrackerMaze::GetName() const
 {
   return "RecursiveBacktrackerMaze";
 }
+
+} // namespace maze

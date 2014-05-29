@@ -22,6 +22,9 @@
 #include "Marked.h"
 #include "Maze.h"
 
+namespace maze
+{
+
 class PrimsMaze : public Maze
 {
 public:
@@ -42,5 +45,7 @@ private:
   std::vector<Point> walls_;
 
 };
+
+} // namespace maze
 
 #endif // PRIMSMAZE

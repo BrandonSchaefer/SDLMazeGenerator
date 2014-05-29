@@ -21,6 +21,9 @@
 
 #include "Maze.h"
 
+namespace maze
+{
+
 class BinaryTreeMaze : public Maze
 {
 public:
@@ -37,5 +40,7 @@ private:
   int i_;
   int j_;
 };
+
+} // namespace maze
 
 #endif // BINARYTREEMAZE

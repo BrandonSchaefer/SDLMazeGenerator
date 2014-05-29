@@ -19,7 +19,11 @@
 #ifndef CELL
 #define CELL
 
+#include <bitset>
 #include <memory>
+
+namespace maze
+{
 
 class Cell
 {
@@ -30,16 +34,18 @@ public:
 
   enum Direction
   {
-    RIGHT = 1 << 0,
-    DOWN  = 1 << 1,
-    LEFT  = 1 << 2,
-    UP    = 1 << 3
+    RIGHT,
+    DOWN,
+    LEFT,
+    UP,
+    Size
   };
 
   void AddDirection(Direction dir);
   void RemoveDirection(Direction dir);
 
   bool Empty() const;
+  bool DirOpen(Direction const& dir) const;
   bool RightOpen() const;
   bool DownOpen() const;
   bool LeftOpen() const;
@@ -49,8 +55,10 @@ public:
   Cell::Ptr GetParent() const;
 
 private:
-  unsigned int open_directions_;
+  std::bitset<Direction::Size> open_directions_;
   Cell::Ptr parent_;
 };
+
+} // namespace maze
 
 #endif // CELL

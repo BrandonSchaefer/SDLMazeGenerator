@@ -25,6 +25,9 @@
 #include <sdl_backend/ImageTexture.h>
 #include <sdl_backend/MainLoop.h>
 
+#include "MazeGridController.h"
+#include "TopMenu.h"
+
 namespace sbe = sdl_backend;
 
 namespace sdl_maze
@@ -43,7 +46,13 @@ public:
   void Draw(sbe::GraphicsRenderer* graphics) override;
 
 private:
+  void SetupGame();
+
   sbe::MainLoop::Ptr main_loop_;
+
+  MazeGridController::Ptr maze_controller_;
+  TopMenu::Ptr top_menu_;
+
   sbe::EntityLayer::Ptr game_layer_;
 };
 

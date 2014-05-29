@@ -10,7 +10,7 @@ set (CMAKE_AUTOMOC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set (RESDIR "${CMAKE_INSTALL_PREFIX}/share/bouncy-ball/resources")
-configure_file (${CMAKE_SOURCE_DIR}/config.h.cmake ${CMAKE_BINARY_DIR}/config.h) 
+configure_file (${CMAKE_SOURCE_DIR}/config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
 
 file (GLOB _datafiles "${CMAKE_CURRENT_SOURCE_DIR}/resources/*")
 install (FILES ${_datafiles} DESTINATION ${RESDIR})

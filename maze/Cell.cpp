@@ -18,46 +18,51 @@
 
 #include "Cell.h"
 
-using namespace std;
+namespace maze
+{
 
 Cell::Cell()
-  : open_directions_(0)
-  , parent_(nullptr)
+  : parent_(nullptr)
 {}
 
 void Cell::AddDirection(Direction dir)
 {
-  open_directions_ |= dir;
+  open_directions_[dir] = true;
 }
 
 void Cell::RemoveDirection(Direction dir)
 {
-  open_directions_ &= ~(dir);
+  open_directions_[dir] = false;
 }
 
 bool Cell::Empty() const
 {
-  return open_directions_ == 0;
+  return open_directions_.none();
+}
+
+bool Cell::DirOpen(Direction const& dir) const
+{
+  return open_directions_[dir];
 }
 
 bool Cell::RightOpen() const
 {
-  return (open_directions_ & Cell::Direction::RIGHT);
+  return open_directions_[Direction::RIGHT];
 }
 
 bool Cell::DownOpen() const
 {
-  return (open_directions_ & Cell::Direction::DOWN);
+  return open_directions_[Direction::DOWN];
 }
 
 bool Cell::LeftOpen() const
 {
-  return (open_directions_ & Cell::Direction::LEFT);
+  return open_directions_[Direction::LEFT];
 }
 
 bool Cell::UpOpen() const
 {
-  return (open_directions_ & Cell::Direction::UP);
+  return open_directions_[Direction::UP];
 }
 
 void Cell::SetParent(Cell::Ptr const& cell)
@@ -69,3 +74,5 @@ Cell::Ptr Cell::GetParent() const
 {
   return parent_;
 }
+
+} // namespace maze

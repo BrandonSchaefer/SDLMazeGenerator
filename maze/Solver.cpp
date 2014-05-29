@@ -16,6 +16,7 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
+#include "Marked.h"
 #include "Solver.h"
 
 #include <queue>
@@ -24,19 +25,23 @@
 
 using namespace std;
 
+namespace maze
+{
+
 Solver::Solver()
 {
 }
 
-vector<Point> Solver::DFSolve(Maze::Ptr maze)
+vector<Point> Solver::DFSolve(Maze::Ptr const& maze)
 {
+  Point p;
   vector<Point> path;
   Point current = maze->GetStart();
 
-  vector<vector<bool> > marked(maze->Columns(), vector<bool>(maze->Rows(), false));
+  Marked marked(maze->Columns(), maze->Rows());
 
   path.push_back(current);
-  marked[current.x()][current.y()] = true;
+  marked.Mark(current);
 
   while (!path.empty())
   {
@@ -45,37 +50,67 @@ vector<Point> Solver::DFSolve(Maze::Ptr maze)
     if (maze->GetFinish() == current)
       return path;
 
-    if (maze->RightOpen(current) && !marked[current.Right().x()][current.Right().y()])
+    bool found = false;
+    for (int i = 0; i < Cell::Direction::Size; ++i)
     {
-      // Add?
-      path.push_back(current.Right());
-      marked[current.Right().x()][current.Right().y()] = true;
+      p = current.Direction(Cell::Direction(i));
+
+      if (maze->DirOpen(current, Cell::Direction(i)) && !marked.IsMarked(p))
+      {
+        path.push_back(p);
+        marked.Mark(p);
+        found = true;
+        break;
+      }
     }
-    else if (maze->DownOpen(current) && !marked[current.Down().x()][current.Down().y()])
-    {
-      path.push_back(current.Down());
-      marked[current.Down().x()][current.Down().y()] = true;
-    }
-    else if (maze->LeftOpen(current) && !marked[current.Left().x()][current.Left().y()])
-    {
-      path.push_back(current.Left());
-      marked[current.Left().x()][current.Left().y()] = true;
-    }
-    else if (maze->UpOpen(current) && !marked[current.Up().x()][current.Up().y()])
-    {
-      path.push_back(current.Up());
-      marked[current.Up().x()][current.Up().y()] = true;
-    }
-    else
-    {
+
+    if (!found)
       path.pop_back();
-    }
   }
 
   return path;
 }
 
-vector<Point> Solver::BFSolve(Maze::Ptr maze)
+vector<Point> Solver::DFSolveRawMaze(RawMaze const& maze)
+{
+  vector<Point> path;
+  Point current = maze.start;
+
+  vector<vector<int>> raw_maze = maze.raw_maze;
+  vector<vector<bool>> marked(raw_maze.size(), vector<bool>(raw_maze[0].size(), false));
+
+  path.push_back(current);
+  marked[current.x()][current.y()] = true;
+
+  while (!path.empty())
+  {
+    current = path.back();
+
+    if (maze.finish == current)
+      return path;
+
+    bool found = false;
+    for (int i = 0; i < Cell::Direction::Size; ++i)
+    {
+      Point p = current.Direction(Cell::Direction(i));
+
+      if (!raw_maze[p.x()][p.y()] && !marked[p.x()][p.y()])
+      {
+        path.push_back(p);
+        marked[p.x()][p.y()] = true;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found)
+      path.pop_back();
+  }
+
+  return path;
+}
+
+vector<Point> Solver::BFSolve(Maze::Ptr const& maze)
 {
   queue<vector<Point> > paths;
   Point current = maze->GetStart();
@@ -128,3 +163,5 @@ vector<Point> Solver::BFSolve(Maze::Ptr maze)
 
   return path;
 }
+
+} // namespace maze

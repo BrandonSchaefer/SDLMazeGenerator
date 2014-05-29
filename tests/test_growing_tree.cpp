@@ -21,6 +21,12 @@
 
 TEST_F(MockMazeGeneration, TestGrowingTreeSolvable)
 {
-  maze = maze_factory.GenerateMaze(GROWING_TREE, WIDTH, HEIGHT);
+  maze = maze_factory.GenerateMaze(maze::GROWING_TREE, WIDTH, HEIGHT);
   EXPECT_TRUE(SolveAllPoints());
+}
+
+TEST_F(MockMazeGeneration, TestRawGrowingTreeSolvable)
+{
+  maze = maze_factory.GenerateMaze(maze::GROWING_TREE, WIDTH, HEIGHT);
+  EXPECT_TRUE(RawSolveAllPoints());
 }

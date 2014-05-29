@@ -55,7 +55,7 @@ if (GTEST_SRC_DIR)# AND
        test_wilsons.cpp
       )
 
-  include_directories (${SDL_MAZE_GENERATORS_SOURCE_DIR}/maze ${GTEST_INCLUDE_DIR})
+  include_directories (${SDL_MAZE_GENERATORS_SOURCE_DIR} ${GTEST_INCLUDE_DIR})
 
   add_executable (../gtest-test-maze ${GTEST_MAZE_SOURCE})
   target_link_libraries (../gtest-test-maze maze ${GTEST_GMOCK_LIB})

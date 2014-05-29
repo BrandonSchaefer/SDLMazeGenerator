@@ -21,6 +21,12 @@
 
 TEST_F(MockMazeGeneration, TestSideWinderSolvable)
 {
-  maze = maze_factory.GenerateMaze(SIDE_WINDER, WIDTH, HEIGHT);
+  maze = maze_factory.GenerateMaze(maze::SIDE_WINDER, WIDTH, HEIGHT);
   EXPECT_TRUE(SolveAllPoints());
+}
+
+TEST_F(MockMazeGeneration, TestRawSideWinderSolvable)
+{
+  maze = maze_factory.GenerateMaze(maze::SIDE_WINDER, WIDTH, HEIGHT);
+  EXPECT_TRUE(RawSolveAllPoints());
 }

@@ -35,36 +35,43 @@ RenderableGeometry::RenderableGeometry(Rect const& rect)
 void RenderableGeometry::SetRect(Rect const& rect)
 {
   rect_ = rect;
+  geometry_changed.emit();
 }
 
 void RenderableGeometry::SetX(int x)
 {
   rect_.SetX(x);
+  geometry_changed.emit();
 }
 
 void RenderableGeometry::SetY(int y)
 {
   rect_.SetY(y);
+  geometry_changed.emit();
 }
 
 void RenderableGeometry::UpdateX(int x)
 {
   rect_.SetX(rect_.x() + x);
+  geometry_changed.emit();
 }
 
 void RenderableGeometry::UpdateY(int y)
 {
   rect_.SetY(rect_.y() + y);
+  geometry_changed.emit();
 }
 
 void RenderableGeometry::SetWidth(int width)
 {
   rect_.SetWidth(width);
+  geometry_changed.emit();
 }
 
 void RenderableGeometry::SetHeight(int height)
 {
   rect_.SetHeight(height);
+  geometry_changed.emit();
 }
 
 int RenderableGeometry::x() const

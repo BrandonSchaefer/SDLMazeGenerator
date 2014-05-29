@@ -26,12 +26,22 @@
 #include <vector>
 #include <memory>
 
+namespace maze
+{
+
+struct RawMaze
+{
+  std::vector<std::vector<int>> raw_maze;
+  Point start;
+  Point finish;
+};
+
 class Maze
 {
 public:
   typedef std::shared_ptr<Maze> Ptr;
 
-  Maze (int x, int y);
+  Maze (int width, int height);
 
   int Columns() const;
   int Rows() const;
@@ -44,22 +54,16 @@ public:
   Point GetStart() const;
   Point GetFinish() const;
 
-  bool RightOpen(Point point);
-  bool DownOpen(Point point);
-  bool LeftOpen(Point point);
-  bool UpOpen(Point point);
+  bool DirOpen  (Point const& point, Cell::Direction const& dir);
+  bool RightOpen(Point const& point);
+  bool DownOpen (Point const& point);
+  bool LeftOpen (Point const& point);
+  bool UpOpen   (Point const& point);
 
   bool InBounds(Point const& pos) const;
 
   void SetParent(Point const& current, Point const& parent);
   bool ParentEqualPoint(Point const& parent, Point const& point);
-
-  void PrintMaze();
-
-  std::vector<Cell::Direction> GetDirections() const;
-
-  Cell::Direction GetValidRandomDirection(Point& current);
-  Cell::Direction OppositeDirection(Cell::Direction dir) const;
 
   virtual void Generate() = 0;
 
@@ -68,16 +72,24 @@ public:
 
   virtual std::string GetName() const = 0;
 
-protected:
-  std::vector<Cell::Direction> directions_;
+  Cell::Direction GetValidRandomDirection(Point& current);
+  Cell::Direction OppositeDirection(Cell::Direction dir) const;
 
+  RawMaze GetRawMaze() const;
+
+  /* FIXME remove me later, debuging function */
+  void PrintMaze();
+
+protected:
   Point start_;
   Point finish_;
 
 private:
   std::vector<std::vector<Cell::Ptr> > maze_;
 
-  Cell::Ptr Get(Point pos);
+  Cell::Ptr Get(Point pos) const;
 };
+
+} // namespace maze
 
 #endif // MAZE

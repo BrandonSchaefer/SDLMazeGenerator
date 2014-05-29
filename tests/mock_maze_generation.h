@@ -17,8 +17,9 @@
 */
 
 #include <gtest.h>
-#include <MazeFactory.h>
-#include <Solver.h>
+
+#include <maze/MazeFactory.h>
+#include <maze/Solver.h>
 
 int const WIDTH = 10;
 int const HEIGHT = 11;
@@ -35,7 +36,7 @@ public:
     {
       for (int j = 1; j <= maze->Rows()-2; j++)
       {
-        maze->SetStart(Point(i,j));
+        maze->SetStart(maze::Point(i,j));
 
         if (solver.DFSolve(maze).empty())
           return false;
@@ -45,7 +46,25 @@ public:
     return true;
   }
 
-  Maze::Ptr maze;
-  MazeFactory maze_factory;
-  Solver solver;
+  bool RawSolveAllPoints()
+  {
+    maze::RawMaze const& raw_maze = maze->GetRawMaze();
+
+    for (int i = 1; i < (int)raw_maze.raw_maze.size(); i++)
+    {
+      for (int j = 1; j < (int)raw_maze.raw_maze[0].size(); j++)
+      {
+        maze->SetStart(maze::Point(i,j));
+
+        if (solver.DFSolveRawMaze(raw_maze).empty())
+          return false;
+      }
+    }
+
+    return true;
+  }
+
+  maze::Maze::Ptr maze;
+  maze::MazeFactory maze_factory;
+  maze::Solver solver;
 };

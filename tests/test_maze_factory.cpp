@@ -17,7 +17,7 @@
 */
 
 #include <gtest.h>
-#include <MazeFactory.h>
+#include <maze/MazeFactory.h>
 
 int const WIDTH = 10;
 int const HEIGHT = 10;
@@ -28,53 +28,53 @@ public:
   MockMazeFactory()
   {}
 
-  MazeFactory maze_factory;
+  maze::MazeFactory maze_factory;
 };
 
 TEST_F(MockMazeFactory, TestGenerateAldousBroder)
 {
-  Maze::Ptr maze = maze_factory.GenerateMaze(ALDOUS_BRODER, WIDTH, HEIGHT);
-  EXPECT_EQ(maze_factory.GetMazeTitle(ALDOUS_BRODER), maze->GetName());
+  maze::Maze::Ptr maze = maze_factory.GenerateMaze(maze::ALDOUS_BRODER, WIDTH, HEIGHT);
+  EXPECT_EQ(maze_factory.GetMazeTitle(maze::ALDOUS_BRODER), maze->GetName());
 }
 
 TEST_F(MockMazeFactory, TestGenerateBinaryTree)
 {
-  Maze::Ptr maze = maze_factory.GenerateMaze(BINARY_TREE, WIDTH, HEIGHT);
-  EXPECT_EQ(maze_factory.GetMazeTitle(BINARY_TREE), maze->GetName());
+  maze::Maze::Ptr maze = maze_factory.GenerateMaze(maze::BINARY_TREE, WIDTH, HEIGHT);
+  EXPECT_EQ(maze_factory.GetMazeTitle(maze::BINARY_TREE), maze->GetName());
 }
 
 TEST_F(MockMazeFactory, TestGenerateGrowingTree)
 {
-  Maze::Ptr maze = maze_factory.GenerateMaze(GROWING_TREE, WIDTH, HEIGHT);
-  EXPECT_EQ(maze_factory.GetMazeTitle(GROWING_TREE), maze->GetName());
+  maze::Maze::Ptr maze = maze_factory.GenerateMaze(maze::GROWING_TREE, WIDTH, HEIGHT);
+  EXPECT_EQ(maze_factory.GetMazeTitle(maze::GROWING_TREE), maze->GetName());
 }
 
 TEST_F(MockMazeFactory, TestGenerateHuntKill)
 {
-  Maze::Ptr maze = maze_factory.GenerateMaze(HUNT_KILL, WIDTH, HEIGHT);
-  EXPECT_EQ(maze_factory.GetMazeTitle(HUNT_KILL), maze->GetName());
+  maze::Maze::Ptr maze = maze_factory.GenerateMaze(maze::HUNT_KILL, WIDTH, HEIGHT);
+  EXPECT_EQ(maze_factory.GetMazeTitle(maze::HUNT_KILL), maze->GetName());
 }
 
 TEST_F(MockMazeFactory, TestGeneratePrims)
 {
-  Maze::Ptr maze = maze_factory.GenerateMaze(PRIMS, WIDTH, HEIGHT);
-  EXPECT_EQ(maze_factory.GetMazeTitle(PRIMS), maze->GetName());
+  maze::Maze::Ptr maze = maze_factory.GenerateMaze(maze::PRIMS, WIDTH, HEIGHT);
+  EXPECT_EQ(maze_factory.GetMazeTitle(maze::PRIMS), maze->GetName());
 }
 
 TEST_F(MockMazeFactory, TestGenerateRecrsiveBacktracker)
 {
-  Maze::Ptr maze = maze_factory.GenerateMaze(RECURSIVE_BACKTRACKER, WIDTH, HEIGHT);
-  EXPECT_EQ(maze_factory.GetMazeTitle(RECURSIVE_BACKTRACKER), maze->GetName());
+  maze::Maze::Ptr maze = maze_factory.GenerateMaze(maze::RECURSIVE_BACKTRACKER, WIDTH, HEIGHT);
+  EXPECT_EQ(maze_factory.GetMazeTitle(maze::RECURSIVE_BACKTRACKER), maze->GetName());
 }
 
 TEST_F(MockMazeFactory, TestGenerateSideWinder)
 {
-  Maze::Ptr maze = maze_factory.GenerateMaze(SIDE_WINDER, WIDTH, HEIGHT);
-  EXPECT_EQ(maze_factory.GetMazeTitle(SIDE_WINDER), maze->GetName());
+  maze::Maze::Ptr maze = maze_factory.GenerateMaze(maze::SIDE_WINDER, WIDTH, HEIGHT);
+  EXPECT_EQ(maze_factory.GetMazeTitle(maze::SIDE_WINDER), maze->GetName());
 }
 
 TEST_F(MockMazeFactory, TestGenerateWilsons)
 {
-  Maze::Ptr maze = maze_factory.GenerateMaze(WILSONS, WIDTH, HEIGHT);
-  EXPECT_EQ(maze_factory.GetMazeTitle(WILSONS), maze->GetName());
+  maze::Maze::Ptr maze = maze_factory.GenerateMaze(maze::WILSONS, WIDTH, HEIGHT);
+  EXPECT_EQ(maze_factory.GetMazeTitle(maze::WILSONS), maze->GetName());
 }

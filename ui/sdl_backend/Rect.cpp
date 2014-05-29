@@ -132,4 +132,20 @@ bool Rect::PointInside(Point const& point) const
   return false;
 }
 
+void Rect::Shrink(int size)
+{
+  x_ += size;
+  y_ += size;
+  w_ -= size*2;
+  h_ -= size*2;
+}
+
+void Rect::Expand(int size)
+{
+  x_ -= size;
+  y_ -= size;
+  w_ += size*2;
+  h_ += size*2;
+}
+
 } // namespace sdl_backend

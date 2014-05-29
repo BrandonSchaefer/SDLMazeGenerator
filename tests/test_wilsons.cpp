@@ -21,6 +21,12 @@
 
 TEST_F(MockMazeGeneration, TestWilsonsSolvable)
 {
-  maze = maze_factory.GenerateMaze(WILSONS, WIDTH, HEIGHT);
+  maze = maze_factory.GenerateMaze(maze::WILSONS, WIDTH, HEIGHT);
   EXPECT_TRUE(SolveAllPoints());
+}
+
+TEST_F(MockMazeGeneration, TestRawWilsonsSolvable)
+{
+  maze = maze_factory.GenerateMaze(maze::WILSONS, WIDTH, HEIGHT);
+  EXPECT_TRUE(RawSolveAllPoints());
 }

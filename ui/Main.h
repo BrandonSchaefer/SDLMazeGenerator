@@ -20,6 +20,10 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include "MazeMain.h"
+
+#include <sdl_backend/EntityLayer.h>
+
 namespace sdl_maze
 {
 
@@ -29,6 +33,9 @@ public:
   Main();
 
 private:
+  sbe::MainLoop::Ptr    main_loop_;
+  sbe::EntityLayer::Ptr main_layer_;
+  MazeMain::Ptr         maze_main_;
 
 };
 

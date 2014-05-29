@@ -22,6 +22,9 @@
 #include "Marked.h"
 #include "Maze.h"
 
+namespace maze
+{
+
 class WilsonsMaze : public Maze
 {
 public:
@@ -39,5 +42,7 @@ private:
   std::vector<Point> outside_cells_;
   std::vector<std::vector<Cell::Direction>> paths_;
 };
+
+} // namespace maze
 
 #endif // WILSONSMAZE

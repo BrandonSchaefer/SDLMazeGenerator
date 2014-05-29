@@ -16,16 +16,15 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#include <AldousBroderMaze.h>
-#include <BinaryTreeMaze.h>
-#include <GrowingTreeMaze.h>
-#include <HuntAndKillMaze.h>
-#include <RecursiveBacktrackerMaze.h>
-#include <PrimsMaze.h>
-#include <SideWinderMaze.h>
-#include <WilsonsMaze.h>
-
-#include <Solver.h>
+#include <maze/AldousBroderMaze.h>
+#include <maze/BinaryTreeMaze.h>
+#include <maze/GrowingTreeMaze.h>
+#include <maze/HuntAndKillMaze.h>
+#include <maze/RecursiveBacktrackerMaze.h>
+#include <maze/PrimsMaze.h>
+#include <maze/SideWinderMaze.h>
+#include <maze/WilsonsMaze.h>
+#include <maze/Solver.h>
 
 #include <assert.h>
 #include <chrono>
@@ -53,9 +52,9 @@ void print_maze(Maze& maze)
 {
   maze.PrintMaze();
 }
-void test_maze_generates_solvable_path(Maze& maze)
+void test_maze_generates_solvable_path(maze::Maze& maze)
 {
-  Solver s;
+  maze::Solver s;
   vector<Point> path = s.DFSolve(maze);
 
   assert(maze.IsStart(path.front()));
@@ -71,28 +70,28 @@ int main()
 
   vector<Maze*> mazes;
 
-  RecursiveBacktrackerMaze rmaze(X, Y);
+  maze::RecursiveBacktrackerMaze rmaze(X, Y);
   mazes.push_back(&rmaze);
 
-  WilsonsMaze wmaze(X, Y);
+  maze::WilsonsMaze wmaze(X, Y);
   mazes.push_back(&wmaze);
 
-  SideWinderMaze smaze(X, Y);
+  maze::SideWinderMaze smaze(X, Y);
   mazes.push_back(&smaze);
 
-  HuntAndKillMaze hkmaze(X, Y);
+  maze::HuntAndKillMaze hkmaze(X, Y);
   mazes.push_back(&hkmaze);
 
-  AldousBroderMaze abmaze(X, Y);
+  maze::AldousBroderMaze abmaze(X, Y);
   mazes.push_back(&abmaze);
 
-  GrowingTreeMaze gtmaze(X, Y);
+  maze::GrowingTreeMaze gtmaze(X, Y);
   mazes.push_back(&gtmaze);
 
-  PrimsMaze pmaze(X, Y);
+  maze::PrimsMaze pmaze(X, Y);
   mazes.push_back(&pmaze);
 
-  BinaryTreeMaze bmaze(X, Y);
+  maze::BinaryTreeMaze bmaze(X, Y);
   mazes.push_back(&bmaze);
 
   for (auto maze : mazes)

@@ -22,6 +22,9 @@
 #include <vector>
 #include "Point.h"
 
+namespace maze
+{
+
 class Marked
 {
 public:
@@ -34,5 +37,7 @@ private:
   std::vector<std::vector<bool> > marked_;
 
 };
+
+} // namespace maze
 
 #endif // MARKED

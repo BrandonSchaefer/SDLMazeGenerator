@@ -18,6 +18,9 @@
 
 #include "Point.h"
 
+namespace maze
+{
+
 Point::Point (int x, int y)
   : x_(x)
   , y_(y)
@@ -50,6 +53,9 @@ Point Point::Direction(Cell::Direction dir) const
       return Up();
     case (Cell::Direction::DOWN):
       return Down();
+    case (Cell::Direction::Size):
+    default:
+      break;
   }
 
   return Cell::Direction::RIGHT;
@@ -84,3 +90,5 @@ bool Point::operator!=(Point const& p) const
 {
   return !(*this == p);
 }
+
+} // namespace maze

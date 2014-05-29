@@ -16,8 +16,8 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#include <MazeFactory.h>
-#include <Solver.h>
+#include <maze/MazeFactory.h>
+#include <maze/Solver.h>
 #include <gtest.h>
 
 int const WIDTH = 20;
@@ -28,12 +28,12 @@ class MockSolver : public testing::Test
 public:
   MockSolver()
   {
-    maze = maze_factory.GenerateMaze(BINARY_TREE, WIDTH, HEIGTH);
+    maze = maze_factory.GenerateMaze(maze::BINARY_TREE, WIDTH, HEIGTH);
   }
 
-  Maze::Ptr maze;
-  MazeFactory maze_factory;
-  Solver solver;
+  maze::Maze::Ptr maze;
+  maze::MazeFactory maze_factory;
+  maze::Solver solver;
 };
 
 TEST_F(MockSolver, TestDFSolver)

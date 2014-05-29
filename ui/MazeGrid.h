@@ -22,9 +22,15 @@
 
 #include "Cell.h"
 
+#include <maze/Maze.h>
+#include <maze/Solver.h>
+
 #include <sdl_backend/GraphicsRenderer.h>
 #include <sdl_backend/RenderableGeometry.h>
 #include <sdl_backend/Size.h>
+
+#include <memory>
+#include <vector>
 
 namespace sbe = sdl_backend;
 
@@ -34,43 +40,34 @@ namespace sdl_maze
 class MazeGrid : public sbe::RenderableGeometry
 {
 public:
-  MazeGrid(SDL_Renderer* renderer, sbe::Size const& size);
-
-  std::vector<sbe::Point> GetPointsToCheckFromDirection(sbe::Direction const& direction);
+  MazeGrid(SDL_Renderer* renderer, maze::Maze::Ptr const& maze);
 
   void UpdateCellGeometry();
+  void Clear();
 
-  void AddRandomPiece();
-
-  int Value(sbe::Point const& point) const;
-  bool Open(sbe::Point const& point) const;
-
-  void Increment(sbe::Point const& point);
-  void Reset(sbe::Point const& point);
+  void SetNewMaze(maze::Maze::Ptr const& maze);
 
   bool InBounds(sbe::Point const& point) const;
-
-  void SwapCells(sbe::Point const& start, sbe::Point const& dest);
-
-  bool CanAnyCellMove() const;
-  bool NeighbourSharesValue(sbe::Point const& pos) const;
-
-  void PieceCombined(sbe::Point const& pos);
-
-  void Clear();
 
   virtual void Update(float delta_time) override;
   virtual void Draw(sbe::GraphicsRenderer* graphics) override;
 
-private:
+  std::string CurrentMazeName() const;
 
-  std::vector<sbe::Point> GetRightPoints() const;
-  std::vector<sbe::Point> GetUpPoints() const;
-  std::vector<sbe::Point> GetDownPoints() const;
-  std::vector<sbe::Point> GetLeftPoints() const;
+  void SolveMaze();
+
+  void IncreaseGenSpeed();
+  void DecreaseGenSpeed();
+
+private:
+  void TranslateMazeToGridView();
 
   sbe::Size size_;
+  maze::Maze::Ptr current_maze_;
   std::vector<std::vector<Cell::Ptr>> grid_;
+  maze::Solver solver_;
+
+  int gen_speed_;
 };
 
 } // namespace sdl_maze

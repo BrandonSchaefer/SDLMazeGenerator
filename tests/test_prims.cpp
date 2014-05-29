@@ -21,6 +21,12 @@
 
 TEST_F(MockMazeGeneration, TestPrimsSolvable)
 {
-  maze = maze_factory.GenerateMaze(PRIMS, WIDTH, HEIGHT);
+  maze = maze_factory.GenerateMaze(maze::PRIMS, WIDTH, HEIGHT);
   EXPECT_TRUE(SolveAllPoints());
+}
+
+TEST_F(MockMazeGeneration, TestRawPrimsSolvable)
+{
+  maze = maze_factory.GenerateMaze(maze::PRIMS, WIDTH, HEIGHT);
+  EXPECT_TRUE(RawSolveAllPoints());
 }

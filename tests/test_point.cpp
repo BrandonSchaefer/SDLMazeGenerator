@@ -16,7 +16,7 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#include <Point.h>
+#include <maze/Point.h>
 #include <gtest.h>
 
 int const X = 5;
@@ -29,12 +29,12 @@ public:
     : point(X, Y)
   {}
 
-  Point point;
+  maze::Point point;
 };
 
 TEST_F(MockPoint, TestInit)
 {
-  Point p;
+  maze::Point p;
 
   EXPECT_EQ(p.x(), 0);
   EXPECT_EQ(p.y(), 0);
@@ -48,7 +48,7 @@ TEST_F(MockPoint, TestInitValue)
 
 TEST_F(MockPoint, TestCopy)
 {
-  Point p = point;
+  maze::Point p = point;
 
   EXPECT_EQ(p.x(), X);
   EXPECT_EQ(p.y(), Y);
@@ -56,7 +56,7 @@ TEST_F(MockPoint, TestCopy)
 
 TEST_F(MockPoint, TestDirectionRight)
 {
-  Point right = point.Direction(Cell::Direction::RIGHT);
+  maze::Point right = point.Direction(maze::Cell::Direction::RIGHT);
 
   EXPECT_EQ(right.x(), X);
   EXPECT_EQ(right.y(), Y + 1);
@@ -64,7 +64,7 @@ TEST_F(MockPoint, TestDirectionRight)
 
 TEST_F(MockPoint, TestRight)
 {
-  Point right = point.Right();
+  maze::Point right = point.Right();
 
   EXPECT_EQ(right.x(), X);
   EXPECT_EQ(right.y(), Y + 1);
@@ -72,7 +72,7 @@ TEST_F(MockPoint, TestRight)
 
 TEST_F(MockPoint, TestDirectionLeft)
 {
-  Point left = point.Direction(Cell::Direction::LEFT);
+  maze::Point left = point.Direction(maze::Cell::Direction::LEFT);
 
   EXPECT_EQ(left.x(), X);
   EXPECT_EQ(left.y(), Y - 1);
@@ -80,7 +80,7 @@ TEST_F(MockPoint, TestDirectionLeft)
 
 TEST_F(MockPoint, TestLeft)
 {
-  Point left = point.Left();
+  maze::Point left = point.Left();
 
   EXPECT_EQ(left.x(), X);
   EXPECT_EQ(left.y(), Y - 1);
@@ -88,7 +88,7 @@ TEST_F(MockPoint, TestLeft)
 
 TEST_F(MockPoint, TestDirectionDown)
 {
-  Point down = point.Direction(Cell::Direction::DOWN);
+  maze::Point down = point.Direction(maze::Cell::Direction::DOWN);
 
   EXPECT_EQ(down.x(), X + 1);
   EXPECT_EQ(down.y(), Y);
@@ -96,7 +96,7 @@ TEST_F(MockPoint, TestDirectionDown)
 
 TEST_F(MockPoint, TestDown)
 {
-  Point down = point.Down();
+  maze::Point down = point.Down();
 
   EXPECT_EQ(down.x(), X + 1);
   EXPECT_EQ(down.y(), Y);
@@ -104,7 +104,7 @@ TEST_F(MockPoint, TestDown)
 
 TEST_F(MockPoint, TestDirectionUp)
 {
-  Point up = point.Direction(Cell::Direction::UP);
+  maze::Point up = point.Direction(maze::Cell::Direction::UP);
 
   EXPECT_EQ(up.x(), X - 1);
   EXPECT_EQ(up.y(), Y);
@@ -112,7 +112,7 @@ TEST_F(MockPoint, TestDirectionUp)
 
 TEST_F(MockPoint, TestUp)
 {
-  Point up = point.Up();
+  maze::Point up = point.Up();
 
   EXPECT_EQ(up.x(), X - 1);
   EXPECT_EQ(up.y(), Y);
@@ -120,7 +120,7 @@ TEST_F(MockPoint, TestUp)
 
 TEST_F(MockPoint, TestEqualityOperator)
 {
-  Point p = point;
+  maze::Point p = point;
 
   EXPECT_TRUE(p == point);
 }

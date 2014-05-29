@@ -16,7 +16,7 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#include <Cell.h>
+#include <maze/Cell.h>
 #include <gtest.h>
 
 class MockCell : public testing::Test
@@ -25,7 +25,7 @@ public:
   MockCell()
   {}
 
-  Cell cell;
+  maze::Cell cell;
 };
 
 TEST_F(MockCell, TestCellEmpty)
@@ -35,7 +35,7 @@ TEST_F(MockCell, TestCellEmpty)
 
 TEST_F(MockCell, TestAddDirectionRight)
 {
-  cell.AddDirection(Cell::Direction::RIGHT);
+  cell.AddDirection(maze::Cell::Direction::RIGHT);
 
   EXPECT_FALSE(cell.Empty());
   EXPECT_TRUE(cell.RightOpen());
@@ -43,7 +43,7 @@ TEST_F(MockCell, TestAddDirectionRight)
 
 TEST_F(MockCell, TestAddDirectionLeft)
 {
-  cell.AddDirection(Cell::Direction::LEFT);
+  cell.AddDirection(maze::Cell::Direction::LEFT);
 
   EXPECT_FALSE(cell.Empty());
   EXPECT_TRUE(cell.LeftOpen());
@@ -51,7 +51,7 @@ TEST_F(MockCell, TestAddDirectionLeft)
 
 TEST_F(MockCell, TestAddDirectionDown)
 {
-  cell.AddDirection(Cell::Direction::DOWN);
+  cell.AddDirection(maze::Cell::Direction::DOWN);
 
   EXPECT_FALSE(cell.Empty());
   EXPECT_TRUE(cell.DownOpen());
@@ -59,7 +59,7 @@ TEST_F(MockCell, TestAddDirectionDown)
 
 TEST_F(MockCell, TestAddDirectionUp)
 {
-  cell.AddDirection(Cell::Direction::UP);
+  cell.AddDirection(maze::Cell::Direction::UP);
 
   EXPECT_FALSE(cell.Empty());
   EXPECT_TRUE(cell.UpOpen());
@@ -67,8 +67,8 @@ TEST_F(MockCell, TestAddDirectionUp)
 
 TEST_F(MockCell, TestRemoveDirectionRight)
 {
-  cell.AddDirection(Cell::Direction::RIGHT);
-  cell.RemoveDirection(Cell::Direction::RIGHT);
+  cell.AddDirection(maze::Cell::Direction::RIGHT);
+  cell.RemoveDirection(maze::Cell::Direction::RIGHT);
 
   EXPECT_TRUE(cell.Empty());
   EXPECT_FALSE(cell.RightOpen());
@@ -76,8 +76,8 @@ TEST_F(MockCell, TestRemoveDirectionRight)
 
 TEST_F(MockCell, TestRemoveDirectionLeft)
 {
-  cell.AddDirection(Cell::Direction::LEFT);
-  cell.RemoveDirection(Cell::Direction::LEFT);
+  cell.AddDirection(maze::Cell::Direction::LEFT);
+  cell.RemoveDirection(maze::Cell::Direction::LEFT);
 
   EXPECT_TRUE(cell.Empty());
   EXPECT_FALSE(cell.LeftOpen());
@@ -85,8 +85,8 @@ TEST_F(MockCell, TestRemoveDirectionLeft)
 
 TEST_F(MockCell, TestRemoveDirectionDown)
 {
-  cell.AddDirection(Cell::Direction::DOWN);
-  cell.RemoveDirection(Cell::Direction::DOWN);
+  cell.AddDirection(maze::Cell::Direction::DOWN);
+  cell.RemoveDirection(maze::Cell::Direction::DOWN);
 
   EXPECT_TRUE(cell.Empty());
   EXPECT_FALSE(cell.DownOpen());
@@ -94,8 +94,8 @@ TEST_F(MockCell, TestRemoveDirectionDown)
 
 TEST_F(MockCell, TestRemoveDirectionUp)
 {
-  cell.AddDirection(Cell::Direction::UP);
-  cell.RemoveDirection(Cell::Direction::UP);
+  cell.AddDirection(maze::Cell::Direction::UP);
+  cell.RemoveDirection(maze::Cell::Direction::UP);
 
   EXPECT_TRUE(cell.Empty());
   EXPECT_FALSE(cell.UpOpen());
@@ -103,7 +103,7 @@ TEST_F(MockCell, TestRemoveDirectionUp)
 
 TEST_F(MockCell, TestSetParent)
 {
-  Cell::Ptr tmp = std::make_shared<Cell>();
+  maze::Cell::Ptr tmp = std::make_shared<maze::Cell>();
   cell.SetParent(tmp);
 
   EXPECT_EQ(cell.GetParent(), tmp);

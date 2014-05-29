@@ -18,6 +18,9 @@
 
 #include "WilsonsMaze.h"
 
+namespace maze
+{
+
 WilsonsMaze::WilsonsMaze(int x, int y)
   : Maze(x,y)
   , marked_(Columns(), Rows())
@@ -82,3 +85,5 @@ std::string WilsonsMaze::GetName() const
 {
   return "WilsonsMaze";
 }
+
+} // namespace maze

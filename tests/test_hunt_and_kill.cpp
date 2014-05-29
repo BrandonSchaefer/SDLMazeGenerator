@@ -21,6 +21,12 @@
 
 TEST_F(MockMazeGeneration, TestHuntKillSolvable)
 {
-  maze = maze_factory.GenerateMaze(HUNT_KILL, WIDTH, HEIGHT);
+  maze = maze_factory.GenerateMaze(maze::HUNT_KILL, WIDTH, HEIGHT);
   EXPECT_TRUE(SolveAllPoints());
+}
+
+TEST_F(MockMazeGeneration, TestRawHuntKillSolvable)
+{
+  maze = maze_factory.GenerateMaze(maze::HUNT_KILL, WIDTH, HEIGHT);
+  EXPECT_TRUE(RawSolveAllPoints());
 }

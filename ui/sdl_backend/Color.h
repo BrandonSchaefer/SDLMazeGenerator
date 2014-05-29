@@ -27,6 +27,9 @@ namespace sdl_backend
 
 namespace color
 {
+  SDL_Color const RED   = {255, 0, 0, 255};
+  SDL_Color const GREEN = {0, 255, 0, 255};
+  SDL_Color const BLUE  = {0, 0, 255, 255};
   SDL_Color const WHITE  = {255, 255, 255, 255};
   SDL_Color const GREY   = {120, 120, 120, 255};
   SDL_Color const BLACK  = {  0,   0,   0, 255};

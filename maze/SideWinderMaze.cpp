@@ -22,6 +22,9 @@
 
 using namespace std;
 
+namespace maze
+{
+
 SideWinderMaze::SideWinderMaze(int x, int y)
   : Maze(x, y)
   , current_(2, 1)
@@ -54,6 +57,10 @@ void SideWinderMaze::GenerateNext()
 
   j_++;
 
+  // FIXME Make this better... to avoid this
+  if (!HasNext())
+    return;
+
   if (open_east && InBounds(current_.Right()))
   {
     OpenPassage(current_, Cell::Direction::RIGHT);
@@ -84,3 +91,5 @@ string SideWinderMaze::GetName() const
 {
   return "SideWinderMaze";
 }
+
+} // namespace maze

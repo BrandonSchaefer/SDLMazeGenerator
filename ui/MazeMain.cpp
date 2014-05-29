@@ -30,48 +30,25 @@ namespace sdl_maze
 
 namespace
 {
+  int const Y_OFFSET = 50;
+
+  // FIXME Make this dynamic later...
+  //sbe::Size GRID_SIZE(250, 200);
+  sbe::Size GRID_SIZE(200, 136);
+  //sbe::Size GRID_SIZE(100, 68);
+  //sbe::Size GRID_SIZE(70, 47);
+  //sbe::Size GRID_SIZE(16, 11);
 }
-
-/*
-
-|--------------------------------------|
-|                                      |
-|           Top Menu                   |
-|--------------------------------------|
-|                                      |
-|                                      |
-|                                      |
-|         |---------|                  |
-|         | EscMenu |                  |
-|         |---------|                  |
-|                                      |
-|                                      |
-|                                      |
-|        Maze                          |
-|                                      |
-|                                      |
-|                                      |
-|--------------------------------------|
-
-TopMenu.cpp
-PauseMenu.cpp
-
-// Who holds the actual maze::ptr?
-MazeController.cpp <-- Holds the actual maze::ptr, which will then update the MazeEntity.cpp
-MazeEntity.cpp <-- Holds a grid of cell states?
-?Cell? (RenderableGeo)
-
-
-*/
 
 MazeMain::MazeMain(unsigned id, sbe::MainLoop::Ptr const& main_loop)
   : Entity(id)
   , main_loop_(main_loop)
   , game_layer_(std::make_shared<sbe::EntityLayer>())
 {
-  //sbe::Rect const& bound = main_loop_->world()->Boundary();
+  sbe::Rect const& bound = main_loop_->world()->Boundary();
+  main_loop_->world()->SetBoundary({0, Y_OFFSET, bound.width(), bound.height()});
 
-  //game_layer_->Hide();
+  SetupGame();
 
   main_loop_->world()->AddLayerToMiddle(game_layer_);
 }
@@ -79,6 +56,26 @@ MazeMain::MazeMain(unsigned id, sbe::MainLoop::Ptr const& main_loop)
 MazeMain::~MazeMain()
 {
   game_layer_->Clear();
+}
+
+void MazeMain::SetupGame()
+{
+  sbe::EntityCreator ec;
+  sbe::Rect const& bound = main_loop_->world()->Boundary();
+
+  maze_controller_ = std::make_shared<MazeGridController>(ec.GetUniqueId(), main_loop_->Renderer(), GRID_SIZE);
+  maze_controller_->SetRect(bound);
+
+  top_menu_ = std::make_shared<TopMenu>(ec.GetUniqueId(), main_loop_->Renderer());
+  top_menu_->SetRect({0, 0, bound.width(), Y_OFFSET});
+  top_menu_->SetCurrentMazeName(maze_controller_->CurrentMazeName());
+
+  maze_controller_->maze_changed.connect([this] (std::string const& name) {
+    top_menu_->SetCurrentMazeName(name);
+  });
+
+  game_layer_->AddEntity(maze_controller_);
+  game_layer_->AddEntity(top_menu_);
 }
 
 void MazeMain::UpdatePosition(sbe::World::Ptr const& world)
@@ -91,7 +88,6 @@ void MazeMain::Update(float delta_time)
 
 void MazeMain::Draw(sbe::GraphicsRenderer* graphics)
 {
-
   graphics->SetRenderColor(sbe::color::WHITE);
   SDL_Rect dest = {0, 0, graphics->Width(), graphics->Height()};
   SDL_RenderFillRect(graphics->Renderer(), &dest);

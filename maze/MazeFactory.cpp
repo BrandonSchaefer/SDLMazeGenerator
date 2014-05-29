@@ -27,6 +27,9 @@
 #include "SideWinderMaze.h"
 #include "WilsonsMaze.h"
 
+namespace maze
+{
+
 MazeFactory::MazeFactory()
 {}
 
@@ -50,9 +53,18 @@ std::string MazeFactory::GetMazeTitle(MazeType maze_type)
       return "SideWinderMaze";
     case(WILSONS):
       return "WilsonsMaze";
+    case(Size):
+      break;
   }
 
   return ":) <-- Error";
+}
+
+Maze::Ptr MazeFactory::CreateMaze(MazeType maze_type, int width, int height)
+{
+  Maze::Ptr maze = GetMazeByType(maze_type, width, height);
+
+  return maze;
 }
 
 Maze::Ptr MazeFactory::GenerateMaze(MazeType maze_type, int width, int height)
@@ -83,7 +95,11 @@ Maze::Ptr MazeFactory::GetMazeByType(MazeType maze_type, int width, int height)
      return std::make_shared<SideWinderMaze>(width, height);
     case(WILSONS):
      return std::make_shared<WilsonsMaze>(width, height);
+    case(Size):
+      break;
   }
 
   return std::make_shared<PrimsMaze>(width, height);
 }
+
+} // namespace maze

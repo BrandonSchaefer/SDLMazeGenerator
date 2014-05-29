@@ -18,8 +18,11 @@
 
 #include "AldousBroderMaze.h"
 
-AldousBroderMaze::AldousBroderMaze(int x, int y)
-  : Maze(x,y)
+namespace maze
+{
+
+AldousBroderMaze::AldousBroderMaze(int width, int height)
+  : Maze(width, height)
   , marked_(Columns(), Rows())
   , current_(1, 1)
   , cell_count_((Columns()-2) * (Rows()-2))
@@ -33,20 +36,18 @@ void AldousBroderMaze::Generate()
 
 void AldousBroderMaze::GenerateNext()
 {
-  Cell::Direction rand_dir = GetValidRandomDirection(current_);
-  current_ = current_.Direction(rand_dir);
+  Cell::Direction rand_dir;
 
-  if (!marked_.IsMarked(current_))
+  // Find a random cell that is not marked, thats 1 generation.
+  do
   {
-    OpenPassage(current_, OppositeDirection(rand_dir));
-    marked_.Mark(current_);
-    cell_count_--;
-  }
-  else
-  {
-    // If we don't open a new passage, keep going until we do.
-    GenerateNext();
-  }
+    rand_dir = GetValidRandomDirection(current_);
+    current_ = current_.Direction(rand_dir);
+  } while (marked_.IsMarked(current_));
+
+  OpenPassage(current_, OppositeDirection(rand_dir));
+  marked_.Mark(current_);
+  cell_count_--;
 }
 
 bool AldousBroderMaze::HasNext() const
@@ -58,3 +59,5 @@ std::string AldousBroderMaze::GetName() const
 {
   return "AldousBroderMaze";
 }
+
+} // namespace maze

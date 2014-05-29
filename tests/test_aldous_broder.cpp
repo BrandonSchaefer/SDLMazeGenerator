@@ -21,6 +21,12 @@
 
 TEST_F(MockMazeGeneration, TestAldousBroderSolvable)
 {
-  maze = maze_factory.GenerateMaze(ALDOUS_BRODER, WIDTH, HEIGHT);
+  maze = maze_factory.GenerateMaze(maze::ALDOUS_BRODER, WIDTH, HEIGHT);
   EXPECT_TRUE(SolveAllPoints());
+}
+
+TEST_F(MockMazeGeneration, TestRawAldousBroderSolvable)
+{
+  maze = maze_factory.GenerateMaze(maze::ALDOUS_BRODER, WIDTH, HEIGHT);
+  EXPECT_TRUE(RawSolveAllPoints());
 }

@@ -24,19 +24,44 @@
 
 #include <time.h>
 
+#include <maze/MazeFactory.h>
+
 namespace sbe = sdl_backend;
 
 namespace sdl_maze
 {
 
-Main::Main()
+namespace
 {
+  int const WIDTH   = 800;
+  int const HEIGHT  = 600;
+  std::string TITLE = "SDL - Maze Generator";
+}
+
+Main::Main()
+  : main_loop_(std::make_shared<sbe::MainLoop>(TITLE, WIDTH, HEIGHT))
+  , main_layer_(std::make_shared<sbe::EntityLayer>())
+{
+  sbe::EntityCreator ec;
+
+  main_loop_->world()->AddLayerToBottom(main_layer_);
+
+  maze_main_ = std::make_shared<MazeMain>(ec.GetUniqueId(), main_loop_);
+  main_layer_->AddEntity(maze_main_);
+
+  main_loop_->StartMainLoop();
+  main_layer_->Clear();
 }
 
 } // namespace sdl_maze
 
 int main()
 {
+  // TEST
+  //MazeFactory factory;
+  //Maze::Ptr m = factory.GenerateMaze(WILSONS, 40, 75);
+  //m->PrintMaze();
+
   srand(time(nullptr));
 
   sdl_maze::Main main;

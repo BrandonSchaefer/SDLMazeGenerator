@@ -17,19 +17,19 @@
 */
 
 #include <gtest.h>
-#include <Maze.h>
 
-#include <BinaryTreeMaze.h>
+#include <maze/BinaryTreeMaze.h>
+#include <maze/Maze.h>
 
 int const WIDTH = 50;
 int const HEIGHT = 45;
 int const WALL_BOUNDARY = 2;
 
-Point const START = {2,2};
-Point const FINISH = {5,5};
-Point const ON_TOP_WALL_BOUNDARY = {0,1};
+maze::Point const START = {2,2};
+maze::Point const FINISH = {5,5};
+maze::Point const ON_TOP_WALL_BOUNDARY = {0,1};
 
-class FakeMaze : public Maze
+class FakeMaze : public maze::Maze
 {
 public:
   FakeMaze(int x, int y)
@@ -65,7 +65,7 @@ public:
   {}
 
   FakeMaze maze;
-  Point center;
+  maze::Point center;
 };
 
 
@@ -77,73 +77,73 @@ TEST_F(MockMaze, TestColumsAndRows)
 
 TEST_F(MockMaze, TestOpeningPassageRight)
 {
-  maze.OpenPassage(center, Cell::Direction::RIGHT);
+  maze.OpenPassage(center, maze::Cell::Direction::RIGHT);
 
   EXPECT_TRUE(maze.RightOpen(center));
 }
 
 TEST_F(MockMaze, TestOpeningPassageLeft)
 {
-  maze.OpenPassage(center, Cell::Direction::LEFT);
+  maze.OpenPassage(center, maze::Cell::Direction::LEFT);
 
   EXPECT_TRUE(maze.LeftOpen(center));
 }
 
 TEST_F(MockMaze, TestOpeningPassageDown)
 {
-  maze.OpenPassage(center, Cell::Direction::DOWN);
+  maze.OpenPassage(center, maze::Cell::Direction::DOWN);
 
   EXPECT_TRUE(maze.DownOpen(center));
 }
 
 TEST_F(MockMaze, TestOpeningPassageUp)
 {
-  maze.OpenPassage(center, Cell::Direction::UP);
+  maze.OpenPassage(center, maze::Cell::Direction::UP);
 
   EXPECT_TRUE(maze.UpOpen(center));
 }
 
 TEST_F(MockMaze, TestCantOpenOutofBoundsPassage)
 {
-  Point out_bounds(1,1);
-  maze.OpenPassage(out_bounds, Cell::Direction::UP);
+  maze::Point out_bounds(1,1);
+  maze.OpenPassage(out_bounds, maze::Cell::Direction::UP);
 
   EXPECT_FALSE(maze.UpOpen(center));
 }
 
 TEST_F(MockMaze, TestSettingWallRight)
 {
-  maze.OpenPassage(center, Cell::Direction::RIGHT);
+  maze.OpenPassage(center, maze::Cell::Direction::RIGHT);
   EXPECT_TRUE(maze.RightOpen(center));
 
-  maze.SetWall(center, Cell::Direction::RIGHT);
+  maze.SetWall(center, maze::Cell::Direction::RIGHT);
   EXPECT_FALSE(maze.RightOpen(center));
 }
 
 TEST_F(MockMaze, TestSettingWallLeft)
 {
-  maze.OpenPassage(center, Cell::Direction::LEFT);
+  maze.OpenPassage(center, maze::Cell::Direction::LEFT);
   EXPECT_TRUE(maze.LeftOpen(center));
 
-  maze.SetWall(center, Cell::Direction::LEFT);
+  maze.SetWall(center, maze::Cell::Direction::LEFT);
   EXPECT_FALSE(maze.LeftOpen(center));
 }
 
 TEST_F(MockMaze, TestSettingWallDown)
 {
-  maze.OpenPassage(center, Cell::Direction::DOWN);
+  maze.OpenPassage(center, maze::Cell::Direction::DOWN);
   EXPECT_TRUE(maze.DownOpen(center));
 
-  maze.SetWall(center, Cell::Direction::DOWN);
+  maze.SetWall(center, maze::Cell::Direction::DOWN);
   EXPECT_FALSE(maze.DownOpen(center));
 }
 
 TEST_F(MockMaze, TestSettingWallUp)
 {
-  maze.OpenPassage(center, Cell::Direction::UP);
+  maze.OpenPassage(center, maze::Cell::Direction::UP);
   EXPECT_TRUE(maze.UpOpen(center));
 
-  maze.SetWall(center, Cell::Direction::UP);
+  maze.SetWall(center, maze::Cell::Direction::UP);
   EXPECT_FALSE(maze.UpOpen(center));
 }
 
@@ -167,40 +167,30 @@ TEST_F(MockMaze, TestOutOfBounds)
   EXPECT_FALSE(maze.InBounds({-1,-1}));
 }
 
-TEST_F(MockMaze, TestGetDirections)
-{
-  std::vector<Cell::Direction> directions = maze.GetDirections();
-
-  for (auto dir : directions)
-    EXPECT_FALSE(center == center.Direction(dir));
-
-  EXPECT_FALSE(directions.empty());
-}
-
 TEST_F(MockMaze, TestGetValidRandomDirection)
 {
   // Puts us in a place where there is only 1 know valid direction
-  Point p(ON_TOP_WALL_BOUNDARY);
+  maze::Point p(ON_TOP_WALL_BOUNDARY);
 
-  EXPECT_EQ(maze.GetValidRandomDirection(p), Cell::Direction::DOWN);
+  EXPECT_EQ(maze.GetValidRandomDirection(p), maze::Cell::Direction::DOWN);
 }
 
 TEST_F(MockMaze, TestOppositeDirectionRight)
 {
-  EXPECT_EQ(maze.OppositeDirection(Cell::Direction::RIGHT), Cell::Direction::LEFT);
+  EXPECT_EQ(maze.OppositeDirection(maze::Cell::Direction::RIGHT), maze::Cell::Direction::LEFT);
 }
 
 TEST_F(MockMaze, TestOppositeDirectionLeft)
 {
-  EXPECT_EQ(maze.OppositeDirection(Cell::Direction::LEFT), Cell::Direction::RIGHT);
+  EXPECT_EQ(maze.OppositeDirection(maze::Cell::Direction::LEFT), maze::Cell::Direction::RIGHT);
 }
 
 TEST_F(MockMaze, TestOppositeDirectionDown)
 {
-  EXPECT_EQ(maze.OppositeDirection(Cell::Direction::DOWN), Cell::Direction::UP);
+  EXPECT_EQ(maze.OppositeDirection(maze::Cell::Direction::DOWN), maze::Cell::Direction::UP);
 }
 
 TEST_F(MockMaze, TestOppositeDirectionUp)
 {
-  EXPECT_EQ(maze.OppositeDirection(Cell::Direction::UP), Cell::Direction::DOWN);
+  EXPECT_EQ(maze.OppositeDirection(maze::Cell::Direction::UP), maze::Cell::Direction::DOWN);
 }

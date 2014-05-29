@@ -22,16 +22,17 @@
 
 using namespace std;
 
-Maze::Maze (int x, int y)
-  : start_(1, 1)
-  , finish_(x, y)
-  , maze_(x+2)
+namespace maze
 {
-  for (int i = 0; i < x + 2; ++i)
-    for (int j = 0; j < y + 2; ++j)
-      maze_[i].push_back(std::make_shared<Cell>());
 
-  directions_ = {Cell::Direction::RIGHT, Cell::Direction::DOWN, Cell::Direction::LEFT, Cell::Direction::UP};
+Maze::Maze (int width, int height)
+  : start_(1, 1)
+  , finish_(width, height)
+  , maze_(width + 2)
+{
+  for (int i = 0; i < width + 2; ++i)
+    for (int j = 0; j < height + 2; ++j)
+      maze_[i].push_back(std::make_shared<Cell>());
 }
 
 void Maze::SetParent(Point const& current, Point const& parent)
@@ -59,7 +60,7 @@ bool Maze::InBounds(Point const& pos) const
   return false;
 }
 
-Cell::Ptr Maze::Get(Point pos)
+Cell::Ptr Maze::Get(Point pos) const
 {
   return maze_[pos.x()][pos.y()];
 }
@@ -102,29 +103,29 @@ Point Maze::GetFinish() const
   return finish_;
 }
 
-bool Maze::RightOpen(Point point)
+bool Maze::DirOpen(Point const& point, Cell::Direction const& dir)
+{
+  return (InBounds(point) && Get(point)->DirOpen(dir));
+}
+
+bool Maze::RightOpen(Point const& point)
 {
   return (InBounds(point) && Get(point)->RightOpen());
 }
 
-bool Maze::DownOpen(Point point)
+bool Maze::DownOpen(Point const& point)
 {
   return (InBounds(point) && Get(point)->DownOpen());
 }
 
-bool Maze::LeftOpen(Point point)
+bool Maze::LeftOpen(Point const& point)
 {
   return (InBounds(point) && Get(point)->LeftOpen());
 }
 
-bool Maze::UpOpen(Point point)
+bool Maze::UpOpen(Point const& point)
 {
   return (InBounds(point) && Get(point)->UpOpen());
-}
-
-std::vector<Cell::Direction> Maze::GetDirections() const
-{
-  return directions_;
 }
 
 Cell::Direction Maze::GetValidRandomDirection(Point& current)
@@ -134,12 +135,12 @@ Cell::Direction Maze::GetValidRandomDirection(Point& current)
   Point tmp_pt;
   int randN;
 
-  for (auto dir : directions_)
+  for (int i = 0; i < Cell::Direction::Size; ++i)
   {
-    tmp_pt = current.Direction(dir);
+    tmp_pt = current.Direction(Cell::Direction(i));
 
     if (InBounds(tmp_pt))
-      valid_dirs.push_back(dir);
+      valid_dirs.push_back(Cell::Direction(i));
   }
 
   randN = rand() % (valid_dirs.size());
@@ -159,9 +160,59 @@ Cell::Direction Maze::OppositeDirection(Cell::Direction dir) const
       return Cell::Direction::UP;
     case (Cell::Direction::UP):
       return Cell::Direction::DOWN;
+    case (Cell::Direction::Size):
+    default:
+      break;
   }
 
   return Cell::Direction::RIGHT;
+}
+
+constexpr int raw_pos(int i) { return (i - 1) * 2; }
+
+RawMaze Maze::GetRawMaze() const
+{
+  RawMaze raw_maze;
+  raw_maze.start  = start_;
+  raw_maze.finish = Point(finish_.x() * 2 - 1, finish_.y() * 2 - 1);
+
+  // The size of the new raw_maze. Pretty much x * 2, (-3) because we remove -1 + -2 from the far left cells.
+  int col = Columns() * 2 - 3;
+  int row = Rows()    * 2 - 3;
+  int n_i, n_j;
+
+  std::vector<std::vector<int>> maze(col, std::vector<int>(row, 1));
+
+  for (int i = 1; i < Columns() - 1; ++i)
+  {
+    for (int j = 1; j < Rows() - 1; ++j)
+    {
+      Point p(i, j);
+
+      n_i = raw_pos(i);
+      n_j = raw_pos(j);
+      n_i++;
+      n_j++;
+
+      bool right = Get(p)->RightOpen();
+      bool left  = Get(p)->LeftOpen();
+      bool up    = Get(p)->UpOpen();
+      bool down  = Get(p)->DownOpen();
+
+      if (right || left || up || down)
+        maze[n_i][n_j] = 0;
+
+      if (right)
+        maze[n_i][n_j + 1] = 0;
+
+      if (down)
+        maze[n_i + 1][n_j] = 0;
+    }
+  }
+
+  raw_maze.raw_maze = maze;
+
+  return raw_maze;
 }
 
 void Maze::PrintMaze()
@@ -183,7 +234,7 @@ void Maze::PrintMaze()
         cout << "\033[4;34mS\033[0m";
       else if (finish_ == p)
         cout << "\033[4;31mF\033[0m";
-      if (Get(p)->DownOpen() && Get(p.Down())->UpOpen())
+      else if (Get(p)->DownOpen() && Get(p.Down())->UpOpen())
         cout << " ";
       else
         cout << "_";
@@ -196,3 +247,5 @@ void Maze::PrintMaze()
     cout << endl;
   }
 }
+
+} // namespace maze

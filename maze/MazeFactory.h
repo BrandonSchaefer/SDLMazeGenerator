@@ -21,6 +21,9 @@
 
 #include "Maze.h"
 
+namespace maze
+{
+
 enum MazeType
 {
   ALDOUS_BRODER,
@@ -30,7 +33,8 @@ enum MazeType
   PRIMS,
   RECURSIVE_BACKTRACKER,
   SIDE_WINDER,
-  WILSONS
+  WILSONS,
+  Size
 };
 
 class MazeFactory
@@ -38,6 +42,7 @@ class MazeFactory
 public:
   MazeFactory();
 
+  Maze::Ptr CreateMaze(MazeType maze_type, int width, int height);
   Maze::Ptr GenerateMaze(MazeType maze_type, int width, int height);
   std::string GetMazeTitle(MazeType maze_type);
 
@@ -45,5 +50,7 @@ private:
   Maze::Ptr GetMazeByType(MazeType maze_type, int width, int height);
 
 };
+
+} // namespace maze
 
 #endif // MAZEFACTORY

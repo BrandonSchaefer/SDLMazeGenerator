@@ -22,6 +22,9 @@
 #include "Maze.h"
 #include "Marked.h"
 
+namespace maze
+{
+
 class GrowingTreeMaze : public Maze
 {
 public:
@@ -42,5 +45,7 @@ private:
   std::vector<Point> open_neighbours_;
   std::pair<Point, Cell::Direction> cur_pair_;
 };
+
+} // namespace maze
 
 #endif // GROWINGTREEMAZE

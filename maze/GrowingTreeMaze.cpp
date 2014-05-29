@@ -18,6 +18,9 @@
 
 #include "GrowingTreeMaze.h"
 
+namespace maze
+{
+
 GrowingTreeMaze::GrowingTreeMaze(int x, int y)
   : Maze(x,y)
   , marked_(Columns(), Rows())
@@ -48,8 +51,9 @@ std::pair<Point, Cell::Direction> GrowingTreeMaze::GetValidNeighbour()
   Cell::Direction new_dir;
   Point tmp_pt;
 
-  for (auto dir : directions_)
+  for (int i = 0; i < Cell::Direction::Size; ++i)
   {
+    auto dir = Cell::Direction(i);
     tmp_pt = rand_pt.Direction(dir);
 
     if (InBounds(tmp_pt) && !marked_.IsMarked(tmp_pt))
@@ -97,3 +101,5 @@ std::string GrowingTreeMaze::GetName() const
 {
   return "GrowingTreeMaze";
 }
+
+} // namespace maze

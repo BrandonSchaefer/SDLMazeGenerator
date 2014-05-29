@@ -23,6 +23,8 @@
 #include "Renderable.h"
 #include "Rect.h"
 
+#include <sigc++/signal.h>
+
 #include <SDL2/SDL.h>
 
 namespace sdl_backend
@@ -51,6 +53,8 @@ public:
 
   Rect rect() const;
   SDL_Rect sdl_rect() const;
+
+  sigc::signal<void> geometry_changed;
 
 private:
   Rect rect_;

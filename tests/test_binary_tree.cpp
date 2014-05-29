@@ -21,6 +21,12 @@
 
 TEST_F(MockMazeGeneration, TestBinaryTreeAllSolvable)
 {
-  maze = maze_factory.GenerateMaze(BINARY_TREE, WIDTH, HEIGHT);
+  maze = maze_factory.GenerateMaze(maze::BINARY_TREE, WIDTH, HEIGHT);
   EXPECT_TRUE(SolveAllPoints());
+}
+
+TEST_F(MockMazeGeneration, TestRawBinaryTreeAllSolvable)
+{
+  maze = maze_factory.GenerateMaze(maze::BINARY_TREE, WIDTH, HEIGHT);
+  EXPECT_TRUE(RawSolveAllPoints());
 }

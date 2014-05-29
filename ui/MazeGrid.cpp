@@ -27,203 +27,107 @@ namespace sdl_maze
 
 namespace
 {
-  int const SPACING = 1;
-  int const PERCENT = 10;
+  int const SPACING          = 0;
+  int const GENERATION_SPEED = 5;
 }
 
-MazeGrid::MazeGrid(SDL_Renderer* renderer, sbe::Size const& size)
-  : size_(size)
-  , grid_(size_.width)
+MazeGrid::MazeGrid(SDL_Renderer* renderer, maze::Maze::Ptr const& maze)
+  : size_(0, 0)
+  , current_maze_(maze)
+  , gen_speed_(GENERATION_SPEED)
 {
+  maze::RawMaze raw_maze = current_maze_->GetRawMaze();
+  size_.width  = raw_maze.raw_maze.size();
+  size_.height = raw_maze.raw_maze[0].size();
+
+  grid_.resize(size_.width);
+
   for (int i = 0; i < size_.width; ++i)
-    for (int j = 0; j < size.height; ++j)
+    for (int j = 0; j < size_.height; ++j)
       grid_[i].push_back(std::make_shared<Cell>(renderer));
+}
+
+void MazeGrid::TranslateMazeToGridView()
+{
+  maze::RawMaze raw_maze = current_maze_->GetRawMaze();
+
+  for (unsigned i = 0; i < raw_maze.raw_maze.size(); ++i)
+    for (unsigned j = 0; j < raw_maze.raw_maze[0].size(); ++j)
+      if (!raw_maze.raw_maze[i][j])
+        grid_[i][j]->SetOpen();
+
+  grid_[raw_maze.start.x()][raw_maze.start.y()]->Start();
+  grid_[raw_maze.finish.x()][raw_maze.finish.y()]->Finish();
+}
+
+void MazeGrid::SetNewMaze(maze::Maze::Ptr const& maze)
+{
+  current_maze_ = maze;
+  TranslateMazeToGridView();
+}
+
+void MazeGrid::SolveMaze()
+{
+  if (!current_maze_->HasNext())
+  {
+    //FIXME should hold on to this... when we translate, possibly
+    maze::RawMaze raw_maze = current_maze_->GetRawMaze();
+
+    std::vector<maze::Point> points = solver_.DFSolveRawMaze(raw_maze);
+
+    for (auto const& p : points)
+      grid_[p.x()][p.y()]->Mark();
+
+    grid_[raw_maze.start.x()][raw_maze.start.y()]->Start();
+    grid_[raw_maze.finish.x()][raw_maze.finish.y()]->Finish();
+  }
 }
 
 void MazeGrid::UpdateCellGeometry()
 {
-  int start_x = x();
-  int start_y = y();
+  int start_x = x() / 2;
+  int start_y = y() / 2;
 
-  int w = (width()  - start_x) / size_.width;
-  int h = (height() - start_y) / size_.height;
+  int w = width()  / size_.width;
+  int h = (height() - y()) / size_.height;
 
   int min_size = std::min(w, h);
 
   // Need to center the grid
-  int grid_size = (min_size + SPACING) * size_.width;
-  start_x += width()  / 2 - grid_size / 2;
-  start_y += height() / 2 - grid_size / 2; 
+  int grid_size_w = min_size * size_.width;
+  int grid_size_h = min_size * size_.height;
+
+  start_x += width()  / 2 - grid_size_w / 2;
+  start_y += height() / 2 - grid_size_h / 2;
 
   for (int i = 0; i < size_.width; ++i)
   {
     for (int j = 0; j < size_.height; ++j)
     {
-      grid_[i][j]->SetRect({i * (min_size + SPACING) + start_x,
-                            j * (min_size + SPACING) + start_y,
+      grid_[i][j]->SetRect({start_x + i * (min_size + SPACING),
+                            start_y + j * (min_size + SPACING),
                             min_size, min_size});
     }
   }
-
 }
 
-std::vector<sbe::Point> MazeGrid::GetPointsToCheckFromDirection(sbe::Direction const& direction)
+void MazeGrid::IncreaseGenSpeed()
 {
-  std::vector<sbe::Point> points;
-
-  switch (direction)
-  {
-    case sbe::Direction::RIGHT:
-      points = GetRightPoints();
-      break;
-    case sbe::Direction::UP:
-      points = GetUpPoints();
-      break;
-    case sbe::Direction::DOWN:
-      points = GetDownPoints();
-      break;
-    case sbe::Direction::LEFT:
-      points = GetLeftPoints();
-      break;
-    default:
-      break;
-  }
-
-  return points;
+  gen_speed_++;
 }
 
-std::vector<sbe::Point> MazeGrid::GetRightPoints() const
+void MazeGrid::DecreaseGenSpeed()
 {
-  std::vector<sbe::Point> points;
-
-  for (int i = size_.width - 2; i >= 0; --i)
-    for (int j = size_.height - 1; j >= 0; --j)
-      points.push_back({i, j});
-
-  return points;
+  if (gen_speed_ - 1 > 0)
+    gen_speed_--;
 }
 
-std::vector<sbe::Point> MazeGrid::GetUpPoints() const
+std::string MazeGrid::CurrentMazeName() const
 {
-  std::vector<sbe::Point> points;
+  if (current_maze_)
+    return current_maze_->GetName();
 
-  for (int i = 1; i < size_.width; ++i)
-    for (int j = 0; j < size_.height; ++j)
-      points.push_back({j, i});
-
-  return points;
-}
-
-std::vector<sbe::Point> MazeGrid::GetDownPoints() const
-{
-  std::vector<sbe::Point> points;
-
-  for (int i = size_.height - 2; i >= 0; --i)
-    for (int j = 0; j < size_.width; ++j)
-      points.push_back({j, i});
-
-  return points;
-}
-
-std::vector<sbe::Point> MazeGrid::GetLeftPoints() const
-{
-  std::vector<sbe::Point> points;
-
-  for (int i = 1; i < size_.width; ++i)
-    for (int j = 0; j < size_.height; ++j)
-      points.push_back({i, j});
-
-  return points;
-}
-
-
-bool MazeGrid::CanAnyCellMove() const
-{
-  for (int i = 0; i < size_.width; ++i)
-  {
-    for (int j = 0; j < size_.height; ++j)
-    {
-      if (grid_[i][j]->Open())
-        return true;
-
-      if (NeighbourSharesValue({i, j}))
-        return true;
-    }
-  }
-
-  return false;
-}
-
-bool MazeGrid::NeighbourSharesValue(sbe::Point const& pos) const
-{
-  int value = Value(pos);
-
-  if (value <= 0)
-    return false;
-
-  for (unsigned i = 0; i < (unsigned)sbe::Direction::Size; ++i)
-  {
-    sbe::Point new_point = pos.MoveDir(sbe::Direction(i));
-    if (InBounds(new_point) && Value(new_point) == value)
-      return true;
-  }
-
-  return false;
-}
-
-void MazeGrid::AddRandomPiece()
-{
-  std::vector<sbe::Point> open_spaces;
-
-  for (int i = 0; i < size_.width; ++i)
-    for (int j = 0; j < size_.height; ++j)
-      if (grid_[i][j]->Open())
-        open_spaces.push_back({i, j});
-
-  if (!open_spaces.empty())
-  {
-    sbe::Point rand_open_space = open_spaces[rand() % open_spaces.size()];
-    grid_[rand_open_space.x][rand_open_space.y]->Increment();
-
-    int random_percent = rand() % 100;
-
-    if (random_percent < PERCENT)
-      grid_[rand_open_space.x][rand_open_space.y]->Increment();
-  }
-}
-
-int MazeGrid::Value(sbe::Point const& point) const
-{
-  if (InBounds(point))
-    return grid_[point.x][point.y]->Value();
-
-  return 0;
-}
-
-bool MazeGrid::Open(sbe::Point const& point) const
-{
-  return (InBounds(point) && grid_[point.x][point.y]->Open());
-}
-
-void MazeGrid::Increment(sbe::Point const& point)
-{
-  if (InBounds(point))
-    grid_[point.x][point.y]->Increment();
-}
-
-void MazeGrid::Reset(sbe::Point const& point)
-{
-  if (InBounds(point))
-    grid_[point.x][point.y]->Reset();
-}
-
-void MazeGrid::SwapCells(sbe::Point const& start, sbe::Point const& dest)
-{
-  if (InBounds(start) && InBounds(dest))
-  {
-    grid_[dest.x][dest.y]->SetValue(grid_[start.x][start.y]->Value());
-    grid_[start.x][start.y]->Reset();
-  }
+  return "<NoMaze>";
 }
 
 bool MazeGrid::InBounds(sbe::Point const& point) const
@@ -244,13 +148,17 @@ void MazeGrid::Clear()
       grid_[i][j]->Reset();
 }
 
-void MazeGrid::PieceCombined(sbe::Point const& pos)
-{
-  grid_[pos.x][pos.y]->PieceCombined();
-}
-
 void MazeGrid::Update(float delta_time)
 {
+  if (current_maze_->HasNext())
+  {
+    for (int i = 0; i < gen_speed_; ++i)
+      if (current_maze_->HasNext())
+        current_maze_->GenerateNext();
+
+    TranslateMazeToGridView();
+  }
+
   for (int i = 0; i < size_.width; ++i)
     for (int j = 0; j < size_.height; ++j)
       grid_[i][j]->Update(delta_time);

@@ -23,10 +23,6 @@
 #include <sdl_backend/RenderableGeometry.h>
 #include <sdl_backend/StringTexture.h>
 
-#include <SDL2/SDL_mixer.h>
-
-#include <vector>
-
 #include <memory>
 
 namespace sbe = sdl_backend;
@@ -38,28 +34,24 @@ class Cell : public sbe::RenderableGeometry
 {
 public:
   typedef std::shared_ptr<Cell> Ptr;
+
   Cell(SDL_Renderer* renderer);
   ~Cell();
 
-  void Update(float delta_time) override;
-  void Draw(sbe::GraphicsRenderer* graphics) override;
+  void SetOpen();
 
   void Reset();
 
-  bool Open() const;
-  int Value() const;
-
-  void Increment();
-  void SetValue(int value);
-
-  void PieceCombined();
+  void Start();
+  void Finish();
+  void Mark();
+  
+  void Update(float delta_time) override;
+  void Draw(sbe::GraphicsRenderer* graphics) override;
 
 private:
-  int value_;
-  int expand_;
-  float total_;
+  SDL_Color color_;
 
-  sbe::StringTexture value_texture_;
 };
 
 } // namespace sdl_maze

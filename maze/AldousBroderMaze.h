@@ -22,10 +22,13 @@
 #include "Marked.h"
 #include "Maze.h"
 
+namespace maze
+{
+
 class AldousBroderMaze : public Maze
 {
 public:
-  AldousBroderMaze(int x, int y);
+  AldousBroderMaze(int width, int height);
 
   void Generate();
 
@@ -39,5 +42,7 @@ private:
   Point current_;
   unsigned cell_count_;
 };
+
+} // namespace maze
 
 #endif // ALDOUSBRODERMAZE

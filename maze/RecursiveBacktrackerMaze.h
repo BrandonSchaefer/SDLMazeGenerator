@@ -24,6 +24,9 @@
 
 #include <stack>
 
+namespace maze
+{
+
 class RecursiveBacktrackerMaze : public Maze
 {
 public:
@@ -45,5 +48,7 @@ private:
   Point current_;
   unsigned cell_count_;
 };
+
+} // namespace maze
 
 #endif // RECURSIVEBACKTRACKERMAZE

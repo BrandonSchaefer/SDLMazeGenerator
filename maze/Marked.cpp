@@ -18,10 +18,11 @@
 
 #include "Marked.h"
 
-using namespace std;
+namespace maze
+{
 
 Marked::Marked(int x, int y)
-  : marked_(x, vector<bool>(y, false))
+  : marked_(x, std::vector<bool>(y, false))
 {}
 
 bool Marked::IsMarked(Point const& point) const
@@ -33,3 +34,5 @@ void Marked::Mark(Point const& point)
 {
   marked_[point.x()][point.y()] = true;
 }
+
+} // namespace maze

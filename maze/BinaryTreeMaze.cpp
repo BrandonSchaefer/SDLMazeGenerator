@@ -22,8 +22,11 @@
 
 using namespace std;
 
-BinaryTreeMaze::BinaryTreeMaze(int x, int y)
-  : Maze(x,y)
+namespace maze
+{
+
+BinaryTreeMaze::BinaryTreeMaze(int width, int height)
+  : Maze(width, height)
   , i_(1)
   , j_(1)
 {}
@@ -47,6 +50,9 @@ void BinaryTreeMaze::GenerateNext()
 
   p = Point(i_, j_);
   j_++;
+
+  if (!HasNext())
+    return;
 
   if (move_up)
   {
@@ -73,3 +79,5 @@ string BinaryTreeMaze::GetName() const
 {
   return "BinaryTreeMaze";
 }
+
+} // namespace maze

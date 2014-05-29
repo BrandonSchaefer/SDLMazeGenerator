@@ -32,7 +32,7 @@ StringTexture::StringTexture(SDL_Renderer* renderer)
   : texture_creator_(FONT_SIZE)
   , renderer_(renderer)
   , str_texture_(nullptr)
-  , color_(color::WHITE)
+  , color_(color::BLACK)
   , str_("")
 {
 }

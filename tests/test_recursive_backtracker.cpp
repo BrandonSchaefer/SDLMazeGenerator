@@ -21,6 +21,12 @@
 
 TEST_F(MockMazeGeneration, TestRecursiveBacktrackerSolvable)
 {
-  maze = maze_factory.GenerateMaze(RECURSIVE_BACKTRACKER, WIDTH, HEIGHT);
+  maze = maze_factory.GenerateMaze(maze::RECURSIVE_BACKTRACKER, WIDTH, HEIGHT);
   EXPECT_TRUE(SolveAllPoints());
+}
+
+TEST_F(MockMazeGeneration, TestRawRecursiveBacktrackerSolvable)
+{
+  maze = maze_factory.GenerateMaze(maze::RECURSIVE_BACKTRACKER, WIDTH, HEIGHT);
+  EXPECT_TRUE(RawSolveAllPoints());
 }

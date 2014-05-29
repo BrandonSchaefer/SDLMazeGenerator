@@ -18,6 +18,9 @@
 
 #include "PrimsMaze.h"
 
+namespace maze
+{
+
 PrimsMaze::PrimsMaze(int x, int y)
   : Maze(x,y)
   , marked_(Columns(), Rows())
@@ -53,32 +56,34 @@ void PrimsMaze::GenerateNext()
   Point opp_cur;
   Cell::Direction opp_dir;
 
-  current_ = walls_.back();
-  walls_.pop_back();
+  // Find a valid generation
+  do
+  {
+    current_ = walls_.back();
+    walls_.pop_back();
+  } while (!walls_.empty() && marked_.IsMarked(current_));
 
   opp_dir = GetOppositeParentsDirection(current_);
   opp_cur = current_.Direction(opp_dir);
 
-  if (!marked_.IsMarked(current_))
+  OpenPassage(current_, OppositeDirection(opp_dir));
+  marked_.Mark(current_);
+
+  for (int i = 0; i < Cell::Direction::Size; ++i)
   {
-    OpenPassage(current_, OppositeDirection(opp_dir));
-    marked_.Mark(current_);
+    auto dir = Cell::Direction(i);
+    Point cur_dir = current_.Direction(dir);
 
-    for (auto dir : directions_)
-    {
-      Point cur_dir = current_.Direction(dir);
+    if (!InBounds(cur_dir) || marked_.IsMarked(cur_dir))
+      continue;
 
-      if (!InBounds(cur_dir) || marked_.IsMarked(cur_dir))
-        continue;
+    SetParent(cur_dir, current_);
+    walls_.push_back(cur_dir);
 
-      SetParent(cur_dir, current_);
-      walls_.push_back(cur_dir);
-
-      randN = rand() % walls_.size();
-      Point tmp = walls_[randN];
-      walls_[randN] = walls_.back();
-      walls_[walls_.size()-1] = tmp;
-    }
+    randN = rand() % walls_.size();
+    Point tmp = walls_[randN];
+    walls_[randN] = walls_.back();
+    walls_[walls_.size()-1] = tmp;
   }
 }
 
@@ -91,3 +96,5 @@ std::string PrimsMaze::GetName() const
 {
   return "PrimsMaze";
 }
+
+} // namespace maze

@@ -52,6 +52,9 @@ public:
   bool Intersecting(Rect const& rect) const;
   bool PointInside(Point const& point) const;
 
+  void Shrink(int size);
+  void Expand(int size);
+
 private:
   int x_;
   int y_;

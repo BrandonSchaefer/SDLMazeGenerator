@@ -21,6 +21,9 @@
 
 #include "Cell.h"
 
+namespace maze
+{
+
 class Point
 {
 public:
@@ -29,7 +32,7 @@ public:
 
   int x() const;
   int y() const;
-  
+
   Point Direction(Cell::Direction dir) const;
 
   Point Right() const;
@@ -44,5 +47,7 @@ private:
   int x_;
   int y_;
 };
+
+} // namespace maze
 
 #endif // POINT

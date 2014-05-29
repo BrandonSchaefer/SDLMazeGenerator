@@ -23,16 +23,21 @@
 
 #include <vector>
 
+namespace maze
+{
+
 class Solver
 {
 public:
   Solver();
 
-  std::vector<Point> DFSolve(Maze::Ptr maze);
-  std::vector<Point> BFSolve(Maze::Ptr maze);
+  std::vector<Point> DFSolve(Maze::Ptr const& maze);
+  std::vector<Point> DFSolveRawMaze(RawMaze const& maze);
 
-private:
+  std::vector<Point> BFSolve(Maze::Ptr const& maze);
 
 };
+
+} // namespace maze
 
 #endif // SOLVER

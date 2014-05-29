@@ -22,6 +22,9 @@
 #include "Marked.h"
 #include "Maze.h"
 
+namespace maze
+{
+
 class HuntAndKillMaze : public Maze
 {
 public:
@@ -43,5 +46,7 @@ private:
   Point last_used_index_;
   Point current_;
 };
+
+} // namespace maze
 
 #endif // HUNTANDKILLMAZE

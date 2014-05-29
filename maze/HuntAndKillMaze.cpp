@@ -21,6 +21,9 @@
 */
 #include "HuntAndKillMaze.h"
 
+namespace maze
+{
+
 HuntAndKillMaze::HuntAndKillMaze(int x, int y)
   : Maze(x, y)
   , marked_(Columns(), Rows())
@@ -33,8 +36,10 @@ HuntAndKillMaze::HuntAndKillMaze(int x, int y)
 bool HuntAndKillMaze::HasOpenNeighbours(Point& current)
 {
   Point cur_dir;
-  for (auto dir : directions_)
+
+  for (int i = 0; i < Cell::Direction::Size; ++i)
   {
+    auto dir = Cell::Direction(i);
     cur_dir = current.Direction(dir);
 
     if (InBounds(cur_dir) && !marked_.IsMarked(cur_dir))
@@ -80,8 +85,9 @@ Point HuntAndKillMaze::FindNextUnMarkedCell(Point const& current)
   {
     for (int j = 1; j < Rows()-1; j++)
     {
-      for (auto d : directions_)
+      for (int dir = 0; dir < Cell::Direction::Size; ++dir)
       {
+        auto d = Cell::Direction(dir);
         Point p(i,j);
         Point tmp = Point(i,j).Direction(d);
 
@@ -106,8 +112,9 @@ Cell::Direction HuntAndKillMaze::GetUnMarkedRandomDirection(Point& current)
   Point tmp_pt;
   int randN;
 
-  for (auto dir : directions_)
+  for (int i = 0; i < Cell::Direction::Size; ++i)
   {
+    auto dir = Cell::Direction(i);
     tmp_pt = current.Direction(dir);
 
     if (InBounds(tmp_pt) && !marked_.IsMarked(tmp_pt))
@@ -123,3 +130,5 @@ std::string HuntAndKillMaze::GetName() const
 {
   return "HuntAndKillMaze";
 }
+
+} // namespace maze

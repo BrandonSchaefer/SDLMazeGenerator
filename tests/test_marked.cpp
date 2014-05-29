@@ -17,12 +17,12 @@
 */
 
 #include <gtest.h>
-#include <Marked.h>
+#include <maze/Marked.h>
 
 int const WIDTH = 50;
 int const HEIGHT = 45;
 
-Point const CENTER(WIDTH/2, HEIGHT/2);
+maze::Point const CENTER(WIDTH/2, HEIGHT/2);
 
 class MockMarked : public testing::Test
 {
@@ -31,7 +31,7 @@ public:
     : marked(WIDTH, HEIGHT)
   {}
 
-  Marked marked;
+  maze::Marked marked;
 };
 
 TEST_F(MockMarked, TestNotMarked)
