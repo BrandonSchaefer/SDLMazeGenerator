@@ -17,8 +17,6 @@
  * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
  */
 
-//#include "config.h"
-
 #include "Cell.h"
 
 #include <sdl_backend/Color.h>

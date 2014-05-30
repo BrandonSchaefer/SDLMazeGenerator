@@ -19,7 +19,6 @@
 
 #include <SDL2/SDL_image.h>
 
-#include "config.h"
 #include "MazeMain.h"
 
 #include <sdl_backend/Color.h>
