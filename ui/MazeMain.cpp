@@ -32,10 +32,12 @@ namespace
   int const Y_OFFSET = 50;
 
   // FIXME Make this dynamic later...
+  //sbe::Size GRID_SIZE(304, 209);
   //sbe::Size GRID_SIZE(250, 200);
   sbe::Size GRID_SIZE(200, 136);
   //sbe::Size GRID_SIZE(100, 68);
   //sbe::Size GRID_SIZE(70, 47);
+  //sbe::Size GRID_SIZE(32, 22);
   //sbe::Size GRID_SIZE(16, 11);
 }
 
@@ -46,6 +48,17 @@ MazeMain::MazeMain(unsigned id, sbe::MainLoop::Ptr const& main_loop)
 {
   sbe::Rect const& bound = main_loop_->world()->Boundary();
   main_loop_->world()->SetBoundary({0, Y_OFFSET, bound.width(), bound.height()});
+
+  key_up.connect([this] (int keysym, int state, int repeat) {
+    switch (keysym)
+    {
+      case SDLK_ESCAPE:
+        main_loop_->Quit();
+        break;
+      default:
+        break;
+    }
+  });
 
   SetupGame();
 

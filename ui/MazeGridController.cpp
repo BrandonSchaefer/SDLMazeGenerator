@@ -61,6 +61,9 @@ MazeGridController::MazeGridController(unsigned id, SDL_Renderer* renderer, sbe:
       case SDLK_s:
         maze_grid_.SolveMaze();
         break;
+      case SDLK_f:
+        maze_grid_.FinishGeneration();
+        break;
       case SDLK_g:
         CreateNewMaze();
         break;

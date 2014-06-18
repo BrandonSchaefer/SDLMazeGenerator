@@ -56,13 +56,19 @@ void MazeGrid::TranslateMazeToGridView()
       if (!raw_maze.raw_maze[i][j])
         grid_[i][j]->SetOpen();
 
-  grid_[raw_maze.start.x()][raw_maze.start.y()]->Start();
+  grid_[raw_maze.start.x() ][raw_maze.start.y()]->Start();
   grid_[raw_maze.finish.x()][raw_maze.finish.y()]->Finish();
 }
 
 void MazeGrid::SetNewMaze(maze::Maze::Ptr const& maze)
 {
   current_maze_ = maze;
+  TranslateMazeToGridView();
+}
+
+void MazeGrid::FinishGeneration()
+{
+  current_maze_->Generate();
   TranslateMazeToGridView();
 }
 
@@ -78,7 +84,7 @@ void MazeGrid::SolveMaze()
     for (auto const& p : points)
       grid_[p.x()][p.y()]->Mark();
 
-    grid_[raw_maze.start.x()][raw_maze.start.y()]->Start();
+    grid_[raw_maze.start.x() ][raw_maze.start.y()]->Start();
     grid_[raw_maze.finish.x()][raw_maze.finish.y()]->Finish();
   }
 }

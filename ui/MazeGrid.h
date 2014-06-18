@@ -54,6 +54,7 @@ public:
 
   std::string CurrentMazeName() const;
 
+  void FinishGeneration();
   void SolveMaze();
 
   void IncreaseGenSpeed();
