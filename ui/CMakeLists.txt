@@ -24,10 +24,10 @@ set (SDL_MAZE_HDR
       TopMenu.h
     )
 
-add_executable(../sdl-maze ${SDL_MAZE_SRC} ${SDL_MAZE_HDR})
+add_executable (sdl-maze ${SDL_MAZE_SRC} ${SDL_MAZE_HDR})
 
-include_directories(${BACKEND_INCLUDE_DIRS} ${CMAKE_BINARY_DIR} ${SDL_MAZE_GENERATORS_SOURCE_DIR}/src ${SDL_MAZE_GENERATORS_SOURCE_DIR})
+include_directories (${BACKEND_INCLUDE_DIRS} ${CMAKE_BINARY_DIR} ${SDL_MAZE_GENERATORS_SOURCE_DIR}/src ${SDL_MAZE_GENERATORS_SOURCE_DIR})
 
-target_link_libraries (../sdl-maze maze ${BACKEND_LIBRARIES} ${BACKEND_LDFLAGS})
+target_link_libraries (sdl-maze maze ${BACKEND_LIBRARIES} ${BACKEND_LDFLAGS})
 
-install (TARGETS ../sdl-maze DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install (TARGETS sdl-maze DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)

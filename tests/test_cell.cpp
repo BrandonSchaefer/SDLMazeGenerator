@@ -17,7 +17,7 @@
 */
 
 #include <maze/Cell.h>
-#include <gtest.h>
+#include <gtest/gtest.h>
 
 class MockCell : public testing::Test
 {

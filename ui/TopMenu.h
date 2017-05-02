@@ -24,8 +24,6 @@
 #include <sdl_backend/StringTexture.h>
 #include <sdl_backend/World.h>
 
-#include <SDL2/SDL.h>
-
 namespace sbe = sdl_backend;
 
 namespace sdl_maze

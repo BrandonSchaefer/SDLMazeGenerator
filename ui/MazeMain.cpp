@@ -1,6 +1,6 @@
 // -*- Mode: C++; indent-tabs-mode: nil; tab-width: 2 -*-
 /*
- * Copyright (C) 2014 Brandon Schaefer
+ * Copyright (C) 2014-2017 Brandon Schaefer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -17,8 +17,6 @@
  * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
  */
 
-#include <SDL2/SDL_image.h>
-
 #include "MazeMain.h"
 
 #include <sdl_backend/Color.h>
@@ -34,8 +32,8 @@ namespace
   // FIXME Make this dynamic later...
   //sbe::Size GRID_SIZE(304, 209);
   //sbe::Size GRID_SIZE(250, 200);
-  sbe::Size GRID_SIZE(200, 136);
-  //sbe::Size GRID_SIZE(100, 68);
+  //sbe::Size GRID_SIZE(200, 136);
+  sbe::Size GRID_SIZE(100, 68);
   //sbe::Size GRID_SIZE(70, 47);
   //sbe::Size GRID_SIZE(32, 22);
   //sbe::Size GRID_SIZE(16, 11);
